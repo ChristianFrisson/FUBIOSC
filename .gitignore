@@ -11,3 +11,14 @@
 *.lai
 *.la
 *.a
+
+# Microsoft projects/files
+*.vcxproj*
+*.csproj*
+*.sln
+*.dll
+*.lib
+
+# OSX files
+*.DS_Store
+
