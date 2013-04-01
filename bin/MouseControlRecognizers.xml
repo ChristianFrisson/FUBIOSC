@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE FubiRecognizers PUBLIC "-//Human Centered Multimedia Lab - Augsburg University//DTD FubiRecognizers V 0.5//EN" "http://hcm-lab.de/downloads/FubiRecognizers.dtd">
+<FubiRecognizers>
+  <LinearMovementRecognizer name="mouseClick">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <Direction x="0" y="0" z="-1"/>
+    <Speed min="2000"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="mouseClick1">
+    <Joints main="leftHand" relative="leftShoulder"/>
+    <Direction x="0" y="-1" z="0"/>
+    <Speed min="2000"/>
+  </LinearMovementRecognizer>
+</FubiRecognizers>

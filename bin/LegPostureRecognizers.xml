@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE FubiRecognizers PUBLIC "-//Human Centered Multimedia Lab - Augsburg University//DTD FubiRecognizers V 0.5//EN" "http://hcm-lab.de/downloads/FubiRecognizers.dtd">
+<FubiRecognizers>
+  <!-- EXPO-standing scheme for coding standing leg posture (only OpenNI compatible parts) -->
+  
+  <!-- left/right leg shapes -->
+  <JointRelationRecognizer name="LegShapeCrossed">
+    <Joints main="rightFoot" relative="leftFoot"/>
+    <MaxValues x="0"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="LegShapeClosed">
+    <Joints main="rightFoot" relative="leftFoot"/>
+    <MinValues x="5"/>
+    <MaxValues x="150"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="LegShapeNormal">
+    <Joints main="rightFoot" relative="leftFoot"/>
+    <MinValues x="151"/>
+    <MaxValues x="300"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="LegShapeApart">
+    <Joints main="rightFoot" relative="leftFoot"/>
+    <MinValues x="301"/>
+  </JointRelationRecognizer>
+
+  <!-- right knee shape -->
+  <JointOrientationRecognizer name="RightKneeShapeNormal">
+    <Joint name="rightKnee"/>
+    <MinDegrees x="-20"/>
+  </JointOrientationRecognizer>
+  <JointOrientationRecognizer name="RightKneeShapeSlightlyFlexed">
+    <Joint name="rightKnee"/>
+    <MaxDegrees x="-20.01"/>
+    <MinDegrees x="-40"/>
+  </JointOrientationRecognizer>
+  <JointOrientationRecognizer name="RightKneeShapeFlexed">
+    <Joint name="rightKnee"/>
+    <MaxDegrees x="-40.01"/>
+  </JointOrientationRecognizer>
+
+  <!-- left knee shape -->
+  <JointOrientationRecognizer name="LeftKneeShapeNormal">
+    <Joint name="leftKnee"/>
+    <MinDegrees x="-20"/>
+  </JointOrientationRecognizer>
+  <JointOrientationRecognizer name="LeftKneeShapeSlightlyFlexed">
+    <Joint name="leftKnee"/>
+    <MaxDegrees x="-20.01"/>
+    <MinDegrees x="-40"/>
+  </JointOrientationRecognizer>
+  <JointOrientationRecognizer name="LeftKneeShapeFlexed">
+    <Joint name="leftKnee"/>
+    <MaxDegrees x="-40.01"/>
+  </JointOrientationRecognizer>
+  
+  <!-- right leg position -->
+  <JointRelationRecognizer name="RightLegPositionBack">
+    <Joints main="rightFoot" relative="rightHip"/>
+    <MinValues z="151"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="RightLegPositionNormal">
+    <Joints main="rightFoot" relative="rightHip"/>
+    <MinValues z="-150"/>
+    <MaxValues z="150"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="RightLegPositionForward">
+    <Joints main="rightFoot" relative="rightHip"/>
+    <MaxValues z="-149"/>
+  </JointRelationRecognizer>
+
+   <!--left leg position--> 
+  <JointRelationRecognizer name="LeftLegPositionBack">
+    <Joints main="leftFoot" relative="leftHip"/>
+    <MinValues z="151"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="LeftLegPositionNormal">
+    <Joints main="leftFoot" relative="leftHip"/>
+    <MinValues z="-150"/>
+    <MaxValues z="150"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="LeftLegPositionForward">
+    <Joints main="leftFoot" relative="leftHip"/>
+    <MaxValues z="-149"/>
+  </JointRelationRecognizer>
+
+</FubiRecognizers>
