@@ -261,17 +261,17 @@ namespace Fubi
 			static void logErr(const char* file, int line, const char* msg, ...);
 		
 	};
-    //GCC-compliant version
-	#ifdef __GNUC__
-    #define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), ##__VA_ARGS__)
-    #define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), ##__VA_ARGS__)
-    #define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
-    #define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
-    #else
+
+	#ifdef _MSC_VER
     #define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), __VA_ARGS__)
     #define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), __VA_ARGS__)
     #define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), __VA_ARGS__)
     #define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), __VA_ARGS__)
+    #else
+    #define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), ##__VA_ARGS__)
+    #define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), ##__VA_ARGS__)
+    #define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
+    #define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
 	#endif
 
 	static std::string removeWhiteSpacesAndToLower(const std::string& str)
