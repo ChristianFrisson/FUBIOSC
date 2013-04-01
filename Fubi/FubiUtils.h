@@ -259,15 +259,20 @@ namespace Fubi
 			static void logDbg(const char* msg, ...);
 			static void logWrn(const char* file, int line, const char* msg, ...);
 			static void logErr(const char* file, int line, const char* msg, ...);
+		
 	};
     //GCC-compliant version
+	#ifdef __GNUC__
     #define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), ##__VA_ARGS__)
     #define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), ##__VA_ARGS__)
     #define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
     #define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
-    //C++ version http://stackoverflow.com/questions/2744956/macro-c-issues-va-args
-    //#define EVENT_INFO(args) EventLogStream (__FILE__, __LINE__, __PRETTY_FUNCTION__) << args
-    //EventLogStream &operator << (EventLogStream &out) { out << "{" << x << ", " << y << ", " << z << "}"; }
+    #else
+    #define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), __VA_ARGS__)
+    #define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), __VA_ARGS__)
+    #define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), __VA_ARGS__)
+    #define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), __VA_ARGS__)
+	#endif
 
 	static std::string removeWhiteSpacesAndToLower(const std::string& str)
 	{
