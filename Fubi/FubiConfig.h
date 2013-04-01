@@ -18,10 +18,10 @@
 //#define USE_OPENNI1
 
 // Uncomment to use OpenNI version 2.x (default)
-#define USE_OPENNI2
+//#define USE_OPENNI2
 
 // Uncomment to use the Kinect SDK
-#define USE_KINECT_SDK
+//#define USE_KINECT_SDK
 
 // Define the number of users for the kinect sdk face tracking to be used
 #define KINECT_SDK_MAX_NUM_FACES_TRACKED 2
@@ -29,7 +29,7 @@
 
 // Note: without OpenCV active, you won't get debug information (e.g. the skeletons) rendered onto the depth image and finger count recognizers won't work!
 // Uncomment to use most current supported OpenCV version, currently OpenCV 2.4.3 (default)
-#define USE_OPENCV 
+//#define USE_OPENCV
 // Uncomment to use OpenCV version 2.2 (version with easy-to-use VS2010 installer)
 //#define USE_OPENCV_22
 

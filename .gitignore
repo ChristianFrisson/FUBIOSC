@@ -22,3 +22,5 @@
 # OSX files
 *.DS_Store
 
+# QtCreator using CMake
+CMakeLists.txt.user

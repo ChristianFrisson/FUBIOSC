@@ -7,4 +7,7 @@ Forked from FUBI Version 0.7.0
 Copyright (C) 2010-2013 Felix Kistler
 http://www.hcm-lab.de/fubi.html
 
+CMake integration by Christian Frisson (UMONS, numediart Institute)
+http://www.numediart.org
+
 See Readme.txt for more details.

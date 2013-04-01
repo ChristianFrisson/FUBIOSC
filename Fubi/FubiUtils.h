@@ -210,7 +210,15 @@ namespace Fubi
 	{
 		SensorOptions(const StreamOptions& depthOptions = StreamOptions(),
 			const StreamOptions& rgbOptions = StreamOptions(), const StreamOptions& irOptions = StreamOptions(-1, -1, -1),
-			SensorType::Type sensorType = SensorType::OPENNI2,
+            #if defined(USE_OPENNI2)
+            SensorType::Type sensorType = SensorType::OPENNI2,
+            #elif defined(USE_KINECTSDK)
+            SensorType::Type sensorType = SensorType::KINECTSDK,
+            #elif defined(USE_OPENNI1)
+            SensorType::Type sensorType = SensorType::OPENNI1,
+            #else
+            SensorType::Type sensorType = SensorType::NONE,
+            #endif
 			Fubi::SkeletonTrackingProfile::Profile profile = Fubi::SkeletonTrackingProfile::ALL,
 			bool mirrorStreams = true, float smoothing = 0)
 			: m_depthOptions(depthOptions), m_irOptions(irOptions), m_rgbOptions(rgbOptions),
@@ -252,11 +260,14 @@ namespace Fubi
 			static void logWrn(const char* file, int line, const char* msg, ...);
 			static void logErr(const char* file, int line, const char* msg, ...);
 	};
-	#define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), __VA_ARGS__)
-	#define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), __VA_ARGS__)
-	#define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), __VA_ARGS__)
-	#define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), __VA_ARGS__)
-
+    //GCC-compliant version
+    #define Fubi_logInfo(msg, ...) Fubi::Logging::logInfo((msg), ##__VA_ARGS__)
+    #define Fubi_logDbg(msg, ...) Fubi::Logging::logDbg((msg), ##__VA_ARGS__)
+    #define Fubi_logWrn(msg, ...) Fubi::Logging::logWrn(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
+    #define Fubi_logErr(msg, ...) Fubi::Logging::logErr(__FILE__, __LINE__, (msg), ##__VA_ARGS__)
+    //C++ version http://stackoverflow.com/questions/2744956/macro-c-issues-va-args
+    //#define EVENT_INFO(args) EventLogStream (__FILE__, __LINE__, __PRETTY_FUNCTION__) << args
+    //EventLogStream &operator << (EventLogStream &out) { out << "{" << x << ", " << y << ", " << z << "}"; }
 
 	static std::string removeWhiteSpacesAndToLower(const std::string& str)
 	{
