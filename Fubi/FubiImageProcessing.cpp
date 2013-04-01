@@ -15,7 +15,9 @@
 
 // OpenCV includes
 #if defined USE_OPENCV || defined USE_OPENCV_22
+#ifndef USE_OPENCV
 #	define USE_OPENCV
+#endif
 #	include "opencv/cv.h"
 #	include "opencv/highgui.h"
 #	include <opencv/cxcore.h>
@@ -250,14 +252,14 @@ void FubiImageProcessing::drawFingerCountImage(unsigned int userID, bool leftHan
 							double dAlpha = 1.0 - alpha;
 							if (numChannels == 1)
 							{
-								unsigned short greyValue = unsigned short(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
-								pDestImage[0] = unsigned short(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
+								unsigned short greyValue = (unsigned short)(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
+								pDestImage[0] = (unsigned short)(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
 							}
 							else
 							{
-								pDestImage[0] = unsigned short(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
-								pDestImage[1] = unsigned short(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
-								pDestImage[2] = unsigned short(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
+								pDestImage[0] = (unsigned short)(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
+								pDestImage[1] = (unsigned short)(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
+								pDestImage[2] = (unsigned short)(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
 								
 								if (numChannels == 4)
 								{
@@ -290,14 +292,14 @@ void FubiImageProcessing::drawFingerCountImage(unsigned int userID, bool leftHan
 							double dAlpha = 1.0 - alpha;
 							if (numChannels == 1)
 							{
-								unsigned char greyValue = unsigned char(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
-								pDestImage[0] = unsigned char(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
+								unsigned char greyValue = (unsigned char)(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
+								pDestImage[0] = (unsigned char)(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
 							}
 							else
 							{
-								pDestImage[0] = unsigned char(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
-								pDestImage[1] = unsigned char(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
-								pDestImage[2] = unsigned char(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
+								pDestImage[0] = (unsigned char)(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
+								pDestImage[1] = (unsigned char)(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
+								pDestImage[2] = (unsigned char)(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
 								
 								if (numChannels == 4)
 								{
