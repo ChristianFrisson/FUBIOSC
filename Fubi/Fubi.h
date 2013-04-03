@@ -712,7 +712,10 @@ namespace Fubi
 	 */
 	FUBI_API void realWorldToProjective(float realWorldX, float realWorldY, float realWorldZ, float& screenX, float& screenY, float& screenZ,
 		int xRes = 640, int yRes = 480,	double hFOV = 1.0144686707507438, double vFOV = 0.78980943449644714);
-
+//
+	FUBI_API std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> getCombinations();
+	FUBI_API std::vector<Fubi::SkeletonJoint::Joint> getComboJoints(std::string comboName);
+//
 	/**
 	 * \brief resests the tracking of all users
 	 */
