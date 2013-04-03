@@ -38,6 +38,7 @@
 
 // Sorting and more
 #include <algorithm>
+#include <iostream>
 
 using namespace Fubi;
 using namespace std;
@@ -83,6 +84,9 @@ FubiCore::FubiCore() : m_numUsers(0), m_sensor(0x0)
 	{
 		m_postureRecognizers[i] = createRecognizer((Postures::Posture)i);
 	}
+	
+	// Combinations not sorted yet
+	m_combinationSorted = false;
 }
 
 bool FubiCore::initFromXml(const char* xmlPath, Fubi::SkeletonTrackingProfile::Profile profile /*= Fubi::SkeletonTrackingProfile::ALL*/,
@@ -764,12 +768,22 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 			rapidxml::xml_node<>* jointNode = recNode->first_node("Joints");
 			if (jointNode)
 			{
+//
+				vector<SkeletonJoint::Joint> sj;
 				attr = jointNode->first_attribute("main");
 				if (attr)
+				{
 					joint = getJointID(attr->value());
+					sj.push_back(joint);
+				}
 				attr = jointNode->first_attribute("relative");
 				if (attr)
+				{
 					relJoint = getJointID(attr->value());
+					sj.push_back(relJoint);
+				}
+				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+//
 			}
 
 			Vec3f minValues = DefaultMinVec;
@@ -865,7 +879,6 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 				}
 
 			}
-
 			if (visible)
 				addJointRelationRecognizer(joint, relJoint, 
 					minValues, maxValues, minDistance, maxDistance,
@@ -901,9 +914,16 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 			rapidxml::xml_node<>* jointNode = recNode->first_node("Joint");
 			if (jointNode)
 			{
+//
+				vector<SkeletonJoint::Joint> sj;
 				attr = jointNode->first_attribute("name");
 				if (attr)
+				{
 					joint = getJointID(attr->value());
+					sj.push_back(joint);
+				}
+				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+//
 			}
 
 			Vec3f minValues = Vec3f(-180.0f, -180.0f, -180.0f);
@@ -976,15 +996,23 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 			rapidxml::xml_node<>* jointNode = recNode->first_node("Joints");
 			if (jointNode)
 			{
+//				
+				vector<SkeletonJoint::Joint> sj;
 				attr = jointNode->first_attribute("main");
 				if (attr)
+				{
 					joint = getJointID(attr->value());
+					sj.push_back(joint);
+				}
 				attr = jointNode->first_attribute("relative");
 				if (attr)
 				{
 					relJoint = getJointID(attr->value());
+					sj.push_back(relJoint);
 					useRelative = true;
 				}
+				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+//
 			}
 
 			Vec3f direction;
@@ -1103,9 +1131,16 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 			rapidxml::xml_node<>* jointNode = recNode->first_node("Joint");
 			if (jointNode)
 			{
+//				
+				vector<SkeletonJoint::Joint> sj;
 				attr = jointNode->first_attribute("name");
 				if (attr)
+				{
 					joint = getJointID(attr->value());
+					sj.push_back(joint);
+				}
+				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+//
 			}
 
 			unsigned int minFingers = 0;
@@ -1160,6 +1195,12 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 	doc.clear();
 	// release the buffer
 	delete[] buffer;
+//
+	/*printLoadedRecognizers();
+	cout << endl;
+	printLoadedCombinations();
+	cout << endl;*/
+//
 	return loadedAnything;
 }
 
@@ -1220,6 +1261,10 @@ bool FubiCore::loadCombinationRecognizerFromXML(rapidxml::xml_node<>* node, floa
 				rapidxml::xml_attribute<>* attr = recRefNode->first_attribute("name");
 				if (attr)
 				{
+//
+					if(findInStringPairVector(m_combinationRecognizers, rec->getName(), attr->value()) == -1)
+						m_combinationRecognizers.push_back(pair <string, string>(rec->getName(), attr->value()));
+//
 					bool ignoreOnTrackingError = false;
 					rapidxml::xml_attribute<>* attr1 = recRefNode->first_attribute("ignoreOnTrackingError");
 					if (attr1)
@@ -1298,6 +1343,10 @@ bool FubiCore::loadCombinationRecognizerFromXML(rapidxml::xml_node<>* node, floa
 				rapidxml::xml_attribute<>* attr = notRecRefNode->first_attribute("name");
 				if (attr)
 				{
+//
+					if(findInStringPairVector(m_combinationRecognizers, rec->getName(), attr->value()) == -1)
+						m_combinationRecognizers.push_back(pair <string, string>(rec->getName(), attr->value()));
+//					
 					// Default for not recognizers is true, as with a tracking error there is also no recognition
 					bool ignoreOnTrackingError = true;
 					rapidxml::xml_attribute<>* attr1 = notRecRefNode->first_attribute("ignoreOnTrackingError");
@@ -1382,6 +1431,10 @@ bool FubiCore::loadCombinationRecognizerFromXML(rapidxml::xml_node<>* node, floa
 					rapidxml::xml_attribute<>* attr = alternativeRecRefNode->first_attribute("name");
 					if (attr)
 					{
+//
+						if(findInStringPairVector(m_combinationRecognizers, rec->getName(), attr->value()) == -1)
+							m_combinationRecognizers.push_back(pair <string, string>(rec->getName(), attr->value()));
+//
 						bool ignoreOnTrackingError = false;
 						rapidxml::xml_attribute<>* attr1 = alternativeRecRefNode->first_attribute("ignoreOnTrackingError");
 						if (attr1)
@@ -1459,6 +1512,10 @@ bool FubiCore::loadCombinationRecognizerFromXML(rapidxml::xml_node<>* node, floa
 					rapidxml::xml_attribute<>* attr = alternativeNotRecRefNode->first_attribute("name");
 					if (attr)
 					{
+//
+						if(findInStringPairVector(m_combinationRecognizers, rec->getName(), attr->value()) == -1)
+							m_combinationRecognizers.push_back(pair <string, string>(rec->getName(), attr->value()));
+//
 						// Default for not recognizers is true, as with a tracking error there is also no recognition
 						bool ignoreOnTrackingError = true;
 						rapidxml::xml_attribute<>* attr1 = alternativeNotRecRefNode->first_attribute("ignoreOnTrackingError");
@@ -1705,6 +1762,12 @@ void FubiCore::clearUserDefinedRecognizers()
 		delete iter2->second;
 	}
 	m_hiddenUserDefinedRecognizers.clear();
+//
+	m_jointsRecognizers.clear();
+	m_jointsCombinations.clear();
+	m_combinationRecognizers.clear();
+	m_combinationSorted = false;
+//
 }
 
 void FubiCore::updateTrackingData(unsigned int userId, float* skeleton, bool localOrientsValid /*= true*/,	double timeStamp /*= -1*/)
@@ -1838,4 +1901,123 @@ bool FubiCore::saveImage(const char* fileName, int jpegQuality, ImageType::Type 
 void FubiCore::getColorForUserID(unsigned int id, float& r, float& g, float& b)
 {
 	FubiImageProcessing::getColorForUserID(id, r, g, b);
+}
+
+//// Added functions 2013/03/29
+void FubiCore::printLoadedRecognizers()
+{
+	string name;
+	vector <SkeletonJoint::Joint> sj;
+
+	for(unsigned int i=0; i<m_jointsRecognizers.size(); i++)
+	{
+		name = m_jointsRecognizers[i].first;
+		sj = m_jointsRecognizers[i].second;
+		cout << name;
+		for(unsigned int j=0; j<sj.size(); j++)
+		{
+			cout << " " << getJointName(sj[j]);
+		}
+		cout << endl;
+	}
+}
+
+void FubiCore::printLoadedCombinations()
+{
+	for(unsigned int i=0; i<m_combinationRecognizers.size(); i++)
+	{
+		cout << m_combinationRecognizers[i].first << " " << m_combinationRecognizers[i].second << endl;
+	}
+}
+
+void FubiCore::printLoadedJointsCombinations()
+{
+	vector<Fubi::SkeletonJoint::Joint> joints;
+	for(unsigned int i=0; i<m_jointsCombinations.size(); i++)
+	{
+		cout << m_jointsCombinations[i].first;
+		joints = m_jointsCombinations[i].second;
+		cout << " nb joints: " << joints.size();
+		for(unsigned int j=0; j<joints.size(); j++)
+			cout << " " << getJointName(joints[j]);
+		cout << endl;
+	}
+}
+
+
+void FubiCore::combinationRecToJoints()
+{
+	vector<string> comboNames;
+	string comboName;
+	for(unsigned int i=0; i<m_combinationRecognizers.size(); i++)
+	{
+		comboName = m_combinationRecognizers[i].first;
+		if(findInStringVector(comboNames, comboName) == -1)
+			comboNames.push_back(comboName);
+	}
+	vector<Fubi::SkeletonJoint::Joint> joints;
+	for(unsigned int i=0; i<comboNames.size(); i++)
+		m_jointsCombinations.push_back(pair<string, vector<Fubi::SkeletonJoint::Joint>>(comboNames[i], joints));
+
+	string recoName;
+	vector<Fubi::SkeletonJoint::Joint> comboJoints;
+	vector<Fubi::SkeletonJoint::Joint> recJoints;
+	for(unsigned int i=0; i<m_jointsCombinations.size(); i++)
+	{
+		comboJoints.clear();
+		for(unsigned int j=0; j<m_combinationRecognizers.size(); j++)
+		{
+			comboName = m_combinationRecognizers[j].first;
+			recoName = m_combinationRecognizers[j].second;
+			if(m_jointsCombinations[i].first == comboName)
+			{
+				for(unsigned int k=0; k<m_jointsRecognizers.size(); k++)
+				{
+					if(m_jointsRecognizers[k].first == recoName)
+					{
+						recJoints = m_jointsRecognizers[k].second;
+						for(unsigned int l=0; l<recJoints.size(); l++)
+						{
+							if(findInJointVector(comboJoints, recJoints[l]) == -1)
+								comboJoints.push_back(recJoints[l]);
+						}
+					}
+				}
+			}
+		}
+		m_jointsCombinations[i].second = comboJoints;
+	}
+	m_combinationSorted = true;
+	//printLoadedJointsCombinations();
+}
+
+
+int FubiCore::findInStringVector(vector<string> vec, string s)
+{
+	for(unsigned int i=0; i<vec.size(); i++)
+	{
+		if(vec[i] == s)
+			return i;
+	}
+	return -1;
+}
+
+int FubiCore::findInJointVector(vector<Fubi::SkeletonJoint::Joint> vec, Fubi::SkeletonJoint::Joint j)
+{
+	for(unsigned int i=0; i<vec.size(); i++)
+	{
+		if(vec[i] == j)
+			return i;
+	}
+	return -1;
+}
+
+int FubiCore::findInStringPairVector(vector<pair<string, string>> vec, string s1, string s2)
+{
+	for(unsigned int i=0; i<vec.size(); i++)
+	{
+		if(vec[i].first == s1 && vec[i].second == s2)
+			return i;
+	}
+	return -1;
 }
