@@ -616,7 +616,30 @@ namespace Fubi
 		screenY = result.y;
 		screenZ = result.z;
 	}
-
+//
+	FUBI_API std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> getCombinations()
+	{
+		FubiCore* core = FubiCore::getInstance();
+		if (core)
+		{
+			if(!core->m_combinationSorted)
+				core->combinationRecToJoints();
+			return core->m_jointsCombinations;
+		}
+	}
+	
+	FUBI_API std::vector<Fubi::SkeletonJoint::Joint> getComboJoints(std::string comboName)
+	{
+		std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> combinations = getCombinations();
+		for(unsigned int i=0; i<combinations.size(); i++)
+		{
+			if(combinations[i].first == comboName)
+				return combinations[i].second;
+		}
+		std::vector<Fubi::SkeletonJoint::Joint> j;
+		return j;
+	}
+//
 	FUBI_API void resetTracking()
 	{
 		FubiCore* core = FubiCore::getInstance();
