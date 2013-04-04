@@ -97,10 +97,10 @@ void checkPostures(unsigned int userID)
 				msg.pushFloat(jointPosition.z);
 				nb += 3;
 				
-				msg.pushFloat(jointOrientation.x);
-				msg.pushFloat(jointOrientation.y);
-				msg.pushFloat(jointOrientation.z);
-				nb += 3;
+				// msg.pushFloat(jointOrientation.x);
+				// msg.pushFloat(jointOrientation.y);
+				// msg.pushFloat(jointOrientation.z);
+				// nb += 3;
 			}
 			oscpkt::PacketWriter pw;
 			pw.startBundle().addMessage(msg).endBundle();
