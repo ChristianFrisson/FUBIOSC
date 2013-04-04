@@ -59,7 +59,7 @@ const int OSC_PORT = 9001;
 const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 const char* comboName;
-std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> combinationsJoints;
+std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > combinationsJoints;
 //////////////
 
 

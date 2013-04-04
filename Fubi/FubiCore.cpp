@@ -782,7 +782,7 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 					relJoint = getJointID(attr->value());
 					sj.push_back(relJoint);
 				}
-				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+                m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint> >(name, sj));
 //
 			}
 
@@ -922,7 +922,7 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 					joint = getJointID(attr->value());
 					sj.push_back(joint);
 				}
-				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+                m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint> >(name, sj));
 //
 			}
 
@@ -1011,7 +1011,7 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 					sj.push_back(relJoint);
 					useRelative = true;
 				}
-				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+                m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint> >(name, sj));
 //
 			}
 
@@ -1139,7 +1139,7 @@ bool FubiCore::loadRecognizersFromXML(const std::string& fileName)
 					joint = getJointID(attr->value());
 					sj.push_back(joint);
 				}
-				m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint>>(name, sj));
+                m_jointsRecognizers.push_back(pair<string, vector<SkeletonJoint::Joint> >(name, sj));
 //
 			}
 
@@ -1957,7 +1957,7 @@ void FubiCore::combinationRecToJoints()
 	}
 	vector<Fubi::SkeletonJoint::Joint> joints;
 	for(unsigned int i=0; i<comboNames.size(); i++)
-		m_jointsCombinations.push_back(pair<string, vector<Fubi::SkeletonJoint::Joint>>(comboNames[i], joints));
+        m_jointsCombinations.push_back(pair<string, vector<Fubi::SkeletonJoint::Joint> >(comboNames[i], joints));
 
 	string recoName;
 	vector<Fubi::SkeletonJoint::Joint> comboJoints;
@@ -2012,7 +2012,7 @@ int FubiCore::findInJointVector(vector<Fubi::SkeletonJoint::Joint> vec, Fubi::Sk
 	return -1;
 }
 
-int FubiCore::findInStringPairVector(vector<pair<string, string>> vec, string s1, string s2)
+int FubiCore::findInStringPairVector(vector<pair<string, string> > vec, string s1, string s2)
 {
 	for(unsigned int i=0; i<vec.size(); i++)
 	{

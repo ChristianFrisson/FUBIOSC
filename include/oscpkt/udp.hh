@@ -58,6 +58,8 @@
 #include <string>
 #include <vector>
 
+#include <ostream>
+
 namespace oscpkt {
 
 /** a wrapper class for holding an ip address, mostly used internnally */
@@ -342,7 +344,11 @@ private:
     
     err = getaddrinfo(binding ? 0 : hostname.c_str(), port.empty() ? 0 : port.c_str(), &hints, &result);
     if (err != 0) {
+        #ifdef _MSC_VER
 		setErr(gai_strerrorA(err));
+        #else
+        setErr(gai_strerror(err));
+        #endif
       return false;
     }
 
