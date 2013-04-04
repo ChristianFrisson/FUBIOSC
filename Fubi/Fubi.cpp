@@ -617,7 +617,7 @@ namespace Fubi
 		screenZ = result.z;
 	}
 //
-	FUBI_API std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> getCombinations()
+    FUBI_API std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > getCombinations()
 	{
 		FubiCore* core = FubiCore::getInstance();
 		if (core)
@@ -630,7 +630,7 @@ namespace Fubi
 	
 	FUBI_API std::vector<Fubi::SkeletonJoint::Joint> getComboJoints(std::string comboName)
 	{
-		std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> combinations = getCombinations();
+        std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > combinations = getCombinations();
 		for(unsigned int i=0; i<combinations.size(); i++)
 		{
 			if(combinations[i].first == comboName)

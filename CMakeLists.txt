@@ -119,14 +119,9 @@ ENDIF()
 # OpenCV
 SET(OpenCV_MIN_VERSION "2.3.1")
 IF(USE_OPENCV)
-
-		SET(OpenCV_CONFIG_PATH "${OpenCV_DIR}")
-
-	MESSAGE("OpenCV_DIR ${OpenCV_DIR}")
+	#SET(OpenCV_CONFIG_PATH "${OpenCV_DIR}")
 	find_path(OpenCV_DIR NAMES opencv-config.cmake OpenCVConfig.cmake PATH_SUFFIXES lib/cmake lib)
-	MESSAGE ("OpenCV_DIR ${OpenCV_DIR}")
-MESSAGE("OpenCV_CONFIG_PATH ${OpenCV_CONFIG_PATH}")
-	FIND_PACKAGE ( OpenCV)# REQUIRED COMPONENTS core contrib features2d imgproc legacy objdetect video highgui)
+	FIND_PACKAGE ( OpenCV REQUIRED COMPONENTS core contrib features2d imgproc legacy objdetect video highgui)
 	IF(OpenCV_FOUND)
 		IF(${OpenCV_VERSION} VERSION_LESS ${OpenCV_MIN_VERSION} AND (SUPPORT_VIDEO OR SUPPORT_IMAGE) )
 			MESSAGE(FATAL_ERROR "OpenCV version (${OpenCV_VERSION} is present, while ${OpenCV_MIN_VERSION}+ is required")
@@ -175,7 +170,7 @@ SET(LIBRARY_NAME "FUBI")
 	#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-std=c++0x")
 	#SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c++0x")
 
-	INCLUDE_DIRECTORIES(Fubi Fubi/GestureRecognizer)
+	INCLUDE_DIRECTORIES(Fubi Fubi/GestureRecognizer include)
 
 	FILE(GLOB ${LIBRARY_NAME}_SRCS Fubi/*.cpp Fubi/GestureRecognizer/*.cpp)
 	FILE(GLOB ${LIBRARY_NAME}_HDRS Fubi/*.h Fubi/GestureRecognizer/*.h)

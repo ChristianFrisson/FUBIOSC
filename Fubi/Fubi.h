@@ -406,7 +406,7 @@ namespace Fubi
 	 * @param maxVel (= inf) the maximal velocity that is allowed in this direction
 	 * @param atIndex (= -1) if an index is given, the corresponding recognizer will be replaced instead of creating a new one
 	 * @param name name of the recognizer
-	 * @param maxAngleDifference (=45°) the maximum angle difference that is allowed between the requested direction and the actual movement direction
+	 * @param maxAngleDifference (=45ï¿½) the maximum angle difference that is allowed between the requested direction and the actual movement direction
 	 * @param bool useOnlyCorrectDirectionComponent (=true) If true, this only takes the component of the actual movement that is conform
 	 *				the requested direction, else it always uses the actual movement for speed calculation
 	 *
@@ -713,7 +713,7 @@ namespace Fubi
 	FUBI_API void realWorldToProjective(float realWorldX, float realWorldY, float realWorldZ, float& screenX, float& screenY, float& screenZ,
 		int xRes = 640, int yRes = 480,	double hFOV = 1.0144686707507438, double vFOV = 0.78980943449644714);
 //
-	FUBI_API std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>>> getCombinations();
+    FUBI_API std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > getCombinations();
 	FUBI_API std::vector<Fubi::SkeletonJoint::Joint> getComboJoints(std::string comboName);
 //
 	/**

@@ -301,7 +301,7 @@ public:
 //
 	void combinationRecToJoints();
 	bool m_combinationSorted;
-	std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>> > m_jointsCombinations;
+    std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > m_jointsCombinations;
 //
 
 private:
@@ -342,14 +342,14 @@ private:
 	// User defined Combination recognizers (templates to apply for each user)
 	std::vector<std::pair<std::string, CombinationRecognizer*> > m_userDefinedCombinationRecognizers;
 //
-	std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint>> > m_jointsRecognizers;
-	std::vector<std::pair<std::string, std::string>> m_combinationRecognizers;
+    std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > m_jointsRecognizers;
+    std::vector<std::pair<std::string, std::string> > m_combinationRecognizers;
 	void printLoadedRecognizers();
 	void printLoadedCombinations();
 	void printLoadedJointsCombinations();
 	int findInStringVector(std::vector<std::string> vec, std::string s);
 	int findInJointVector(std::vector<Fubi::SkeletonJoint::Joint> vec, Fubi::SkeletonJoint::Joint j);
-	int findInStringPairVector(std::vector<std::pair<std::string, std::string>> vec, std::string s1, std::string s2);
+    int findInStringPairVector(std::vector<std::pair<std::string, std::string> > vec, std::string s1, std::string s2);
 //
 	// The Combination recognizers that should start automatically when a new user is detected
 	bool m_autoStartCombinationRecognizers[Fubi::Combinations::NUM_COMBINATIONS+1];

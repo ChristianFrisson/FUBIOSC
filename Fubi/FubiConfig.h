@@ -21,7 +21,7 @@
 //#define USE_OPENNI2
 
 // Uncomment to use the Kinect SDK
-#define USE_KINECT_SDK
+//#define USE_KINECT_SDK
 
 // Define the number of users for the kinect sdk face tracking to be used
 #define KINECT_SDK_MAX_NUM_FACES_TRACKED 2
