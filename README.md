@@ -10,4 +10,6 @@ http://www.hcm-lab.de/fubi.html
 CMake integration by Christian Frisson (UMONS, numediart Institute)
 http://www.numediart.org
 
-See Readme.txt for more details.
+OSC integration by Fabien Grisard (Grenoble INP, internship at numediart)
+
+See [Readme.txt](Readme.txt) for more details.
