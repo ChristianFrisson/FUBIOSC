@@ -55,7 +55,7 @@ bool g_exitNextFrame = false;
 /////////// OSC defines
 #define OSCPKT_OSTREAM_OUTPUT
 // OSC global variables
-const int OSC_PORT = 9001;
+const int OSC_PORT = 9000;
 const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 const char* comboName;
@@ -345,7 +345,22 @@ int main(int argc, char ** argv)
 	// All known combination recognizers will be started automatically for new users
 	setAutoStartCombinationRecognition(true);
 //
-	loadRecognizersFromXML("TutorialRecognizers.xml");
+    std::string recognizersFile("TutorialRecognizers.xml");
+#if defined(__APPLE__) && !defined(USE_DEBUG)
+    std::string appPath(argv[0]);
+    std::string suffix(".app");
+    size_t appNamePos = appPath.find(suffix.c_str());
+    std::string appName = appPath.substr(0,appNamePos + suffix.size());
+    recognizersFile = appName + std::string("/Contents/MacOS/") + recognizersFile;
+#endif
+
+    bool recognizersLoaded = loadRecognizersFromXML(recognizersFile.c_str());
+    if(recognizersLoaded)
+        std::cout << "Loaded ";
+    else
+        std::cout << "Couldn't load ";
+    std::cout << "the recognizers from xml file " << recognizersFile << std::endl;
+
 	combinationsJoints = getCombinations();
 //
 	#if defined ( WIN32 ) || defined( _WINDOWS )
