@@ -52,6 +52,8 @@ const short g_numOutputmodes = 5;
 bool g_takePictures = false;
 bool g_exitNextFrame = false;
 
+bool trackingStates[16];
+
 /////////// OSC defines
 #define OSCPKT_OSTREAM_OUTPUT
 // OSC global variables
@@ -68,6 +70,42 @@ void checkPostures(unsigned int userID)
 {	
 //
 	std::vector<Fubi::SkeletonJoint::Joint> joints;
+	FubiUser* user = Fubi::getUser(userID);
+	oscpkt::PacketWriter pw;
+
+	if(user->m_isTracked && !trackingStates[userID])
+	{
+		//Tracking starts
+		trackingStates[userID] = true;
+		oscpkt::Message trackingMsg;
+		std::string trackingMessage;
+		trackingMessage += "/FUBI/Tracking/User";
+		trackingMsg.init(trackingMessage);
+		trackingMsg.pushInt32(userID);
+		trackingMsg.pushBool(trackingStates[userID]);
+
+		pw.startBundle().addMessage(trackingMsg).endBundle();
+		sock.sendPacket(pw.packetData(), pw.packetSize());
+		trackingMsg.clear();
+		std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;
+	}
+	if(!user->m_isTracked && trackingStates[userID])
+	{
+		// Tracking ends
+		trackingStates[userID] = false;
+		oscpkt::Message trackingMsg;
+		std::string trackingMessage;
+		trackingMessage += "/FUBI/Tracking/User";
+		trackingMsg.init(trackingMessage);
+		trackingMsg.pushInt32(userID);
+		trackingMsg.pushBool(trackingStates[userID]);
+
+		pw.startBundle().addMessage(trackingMsg).endBundle();
+		sock.sendPacket(pw.packetData(), pw.packetSize());
+		trackingMsg.clear();
+		std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;		
+	}
+
 	for (unsigned int i= 0; i < getNumUserDefinedCombinationRecognizers(); ++i)
 	{
 		if (getCombinationRecognitionProgressOn(getUserDefinedCombinationRecognizerName(i), userID) == Fubi::RecognitionResult::RECOGNIZED)
@@ -76,13 +114,12 @@ void checkPostures(unsigned int userID)
 			joints = getComboJoints(comboName);
 			
 			// send over OSC
-			oscpkt::Message msg;
-			std::string message;
-			message += "/FUBI/Combination/";
-			message += std::string(comboName);
-			msg.init(message);
+			oscpkt::Message combiMsg;
+			std::string combiMessage;
+			combiMessage += "/FUBI/Combination/";
+			combiMessage += std::string(comboName);
+			combiMsg.init(combiMessage);
 			
-			FubiUser* user = Fubi::getUser(userID);
 			int nb = 0;
 			for(unsigned int i=0; i<joints.size(); i++)
 			{
@@ -90,11 +127,11 @@ void checkPostures(unsigned int userID)
 				Vec3f jointOrientation = user->m_currentTrackingData.jointOrientations[joints[i]].m_orientation.getRot();
 				jointOrientation.normalize();
 
-				msg.pushStr(getJointName(joints[i]));
+				combiMsg.pushStr(getJointName(joints[i]));
 				
-				msg.pushFloat(jointPosition.x);
-				msg.pushFloat(jointPosition.y);
-				msg.pushFloat(jointPosition.z);
+				combiMsg.pushFloat(jointPosition.x);
+				combiMsg.pushFloat(jointPosition.y);
+				combiMsg.pushFloat(jointPosition.z);
 				nb += 3;
 				
 				// msg.pushFloat(jointOrientation.x);
@@ -102,16 +139,16 @@ void checkPostures(unsigned int userID)
 				// msg.pushFloat(jointOrientation.z);
 				// nb += 3;
 			}
-			oscpkt::PacketWriter pw;
-			pw.startBundle().addMessage(msg).endBundle();
+			pw.startBundle().addMessage(combiMsg).endBundle();
 			sock.sendPacket(pw.packetData(), pw.packetSize());
-			msg.clear();
+			combiMsg.clear();
 			std::cout << "sendind OSC message: \"/FUBI/Combination/" << comboName << "\" with " << nb << " parameters" << std::endl;
 		}
 			
 	}
-}
 //
+}
+
 void glutIdle (void)
 {
 	// Display the frame
@@ -307,7 +344,7 @@ void glutKeyboard (unsigned char key, int x, int y)
 			// Reload recognizers from xml
 			clearUserDefinedRecognizers();
 //			
-			if (loadRecognizersFromXML("TutorialRecognizers.xml"))
+			if (loadRecognizersFromXML("MashtaCycleRecognizers.xml"))
 			{		
 				printf("Succesfully reloaded recognizers xml!\n");
 				combinationsJoints = getCombinations();
@@ -326,6 +363,10 @@ int main(int argc, char ** argv)
 	} else {
 		std::cout << "Client started, will send packets to port " << OSC_PORT << std::endl;
 	}
+
+// Initialize tracking states for 16 users
+	for(int i=0; i<16; i++)
+		trackingStates[i] = false;
 //	
 	// Alternative init without xml
 	init(SensorOptions());
@@ -345,7 +386,7 @@ int main(int argc, char ** argv)
 	// All known combination recognizers will be started automatically for new users
 	setAutoStartCombinationRecognition(true);
 //
-    std::string recognizersFile("TutorialRecognizers.xml");
+    std::string recognizersFile("MashtaCycleRecognizers.xml");
 #if defined(__APPLE__) && !defined(USE_DEBUG)
     std::string appPath(argv[0]);
     std::string suffix(".app");
