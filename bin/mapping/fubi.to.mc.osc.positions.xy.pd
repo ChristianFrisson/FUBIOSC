@@ -1,0 +1,39 @@
+#N canvas 0 0 1916 998 10;
+#X obj 154 -48 routeOSC /TorsoPosition;
+#X obj 154 -22 unpack s f f f s f f f;
+#X floatatom 199 7 5 0 0 0 - - -;
+#X floatatom 151 6 5 0 0 0 - - -;
+#X obj 105 131 vsl 20 120 -1 1 0 0 empty empty empty 0 -9 0 10 -4032
+-1 -1 0 1;
+#X obj 135 106 hsl 120 20 -1 1 0 0 empty empty empty -2 -8 0 10 -4032
+-1 -1 0 1;
+#X obj 199 29 / 1500;
+#X obj 105 31 / -1500;
+#X obj 105 54 + 1.667;
+#X obj 214 391 t b f;
+#X obj 198 427 pack f f;
+#X msg 196 454 /mediacycle/browser/0/hover/xy \$1 \$2;
+#X obj 154 -79 r oscfromfubi;
+#X obj 213 500 s osctomc;
+#X obj 149 217 nbx 4 32 -1 1 0 0 empty empty y 0 -20 0 20 -204800 -1
+-1 0 256;
+#X obj 152 154 nbx 4 32 -1 1 0 0 empty empty x 0 -16 0 20 -204800 -1
+-1 0 256;
+#X connect 0 0 1 0;
+#X connect 1 1 2 0;
+#X connect 1 3 3 0;
+#X connect 2 0 6 0;
+#X connect 3 0 7 0;
+#X connect 4 0 14 0;
+#X connect 4 0 9 0;
+#X connect 5 0 15 0;
+#X connect 5 0 10 0;
+#X connect 6 0 5 0;
+#X connect 7 0 8 0;
+#X connect 8 0 4 0;
+#X connect 9 0 10 0;
+#X connect 9 1 10 1;
+#X connect 10 0 11 0;
+#X connect 11 0 13 0;
+#X connect 12 0 0 0;
+#X coords 0 -1 1 1 160 160 2 100 100;
