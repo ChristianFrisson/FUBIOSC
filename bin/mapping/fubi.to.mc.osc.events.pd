@@ -28,7 +28,7 @@
 #X msg 1031 700 /mediacycle/pointer/0/reverb/freeze 0;
 #X obj 412 139 bng 24 250 50 0 empty empty empty 17 7 0 10 -204786
 -1 -1;
-#X obj 850 -114 r oscfromfubi;
+#X obj 851 -144 r oscfromfubi;
 #X obj 1051 758 s osctomc;
 #X msg 710 596 /mediacycle/pointer/0/loop;
 #X text 331 112 Freeze;
@@ -285,6 +285,7 @@
 #X msg 380 11 4;
 #X msg 381 32 4;
 #X obj 1070 63 routeOSC /RightHandSlapsLeftHand;
+#X obj 851 -118 routeOSC /Combination;
 #X connect 0 0 5 0;
 #X connect 0 0 6 0;
 #X connect 0 0 7 0;
@@ -314,12 +315,7 @@
 #X connect 18 0 24 0;
 #X connect 20 0 24 0;
 #X connect 21 0 24 0;
-#X connect 23 0 12 0;
-#X connect 23 0 13 0;
-#X connect 23 0 10 0;
-#X connect 23 0 11 0;
-#X connect 23 0 207 0;
-#X connect 23 0 215 0;
+#X connect 23 0 216 0;
 #X connect 25 0 24 0;
 #X connect 31 0 33 0;
 #X connect 32 0 34 0;
@@ -567,4 +563,10 @@
 #X connect 214 0 157 0;
 #X connect 215 0 183 0;
 #X connect 215 0 130 0;
+#X connect 216 0 12 0;
+#X connect 216 0 13 0;
+#X connect 216 0 10 0;
+#X connect 216 0 11 0;
+#X connect 216 0 207 0;
+#X connect 216 0 215 0;
 #X coords 0 -1 1 1 340 190 2 100 100;

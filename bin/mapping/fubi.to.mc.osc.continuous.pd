@@ -107,7 +107,7 @@
 #X obj 758 121 /;
 #X msg 117 804 /mediacycle/pointer/0/playback_volume \$1;
 #X msg 230 746 /mediacycle/pointer/0/reverb/mix \$1;
-#X obj 709 -226 r oscfromfubi;
+#X obj 709 -236 r oscfromfubi;
 #X obj 166 847 s osctomc;
 #X obj 865 138 * 0.5;
 #X obj 866 162 + 0.5;
@@ -235,6 +235,7 @@
 #X msg 372 48 4;
 #X msg 379 79 3;
 #X msg 330 -56 1;
+#X obj 709 -210 routeOSC /Combination;
 #X connect 0 0 5 0;
 #X connect 0 0 6 0;
 #X connect 0 0 7 0;
@@ -328,10 +329,7 @@
 #X connect 77 0 36 0;
 #X connect 78 0 81 0;
 #X connect 79 0 81 0;
-#X connect 80 0 65 0;
-#X connect 80 0 110 0;
-#X connect 80 0 111 0;
-#X connect 80 0 112 0;
+#X connect 80 0 190 0;
 #X connect 82 0 83 0;
 #X connect 83 0 43 0;
 #X connect 83 0 42 0;
@@ -478,4 +476,8 @@
 #X connect 187 0 122 0;
 #X connect 188 0 131 0;
 #X connect 189 0 9 0;
+#X connect 190 0 65 0;
+#X connect 190 0 110 0;
+#X connect 190 0 111 0;
+#X connect 190 0 112 0;
 #X coords 0 -1 1 1 340 350 2 100 100;
