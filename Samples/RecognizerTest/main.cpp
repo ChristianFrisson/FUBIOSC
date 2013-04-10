@@ -62,7 +62,6 @@ const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 const char* comboName;
 std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > combinationsJoints;
-//////////////
 
 
 // Function called each frame for all tracked users
@@ -72,39 +71,6 @@ void checkPostures(unsigned int userID)
 	std::vector<Fubi::SkeletonJoint::Joint> joints;
 	FubiUser* user = Fubi::getUser(userID);
 	oscpkt::PacketWriter pw;
-
-	if(user->m_isTracked && !trackingStates[userID])
-	{
-		//Tracking starts
-		trackingStates[userID] = true;
-		oscpkt::Message trackingMsg;
-		std::string trackingMessage;
-		trackingMessage += "/FUBI/Tracking/User";
-		trackingMsg.init(trackingMessage);
-		trackingMsg.pushInt32(userID);
-		trackingMsg.pushBool(trackingStates[userID]);
-
-		pw.startBundle().addMessage(trackingMsg).endBundle();
-		sock.sendPacket(pw.packetData(), pw.packetSize());
-		trackingMsg.clear();
-		std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;
-	}
-	if(!user->m_isTracked && trackingStates[userID])
-	{
-		// Tracking ends
-		trackingStates[userID] = false;
-		oscpkt::Message trackingMsg;
-		std::string trackingMessage;
-		trackingMessage += "/FUBI/Tracking/User";
-		trackingMsg.init(trackingMessage);
-		trackingMsg.pushInt32(userID);
-		trackingMsg.pushBool(trackingStates[userID]);
-
-		pw.startBundle().addMessage(trackingMsg).endBundle();
-		sock.sendPacket(pw.packetData(), pw.packetSize());
-		trackingMsg.clear();
-		std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;		
-	}
 
 	for (unsigned int i= 0; i < getNumUserDefinedCombinationRecognizers(); ++i)
 	{
@@ -149,6 +115,52 @@ void checkPostures(unsigned int userID)
 //
 }
 
+//
+void checkTrackingState(std::deque<unsigned int> usersIDs)
+{
+	FubiUser* user;
+	unsigned int userID;
+	oscpkt::PacketWriter pw;
+
+	for(int i=0; i<usersIDs.size(); i++)
+	{
+		userID = usersIDs[i];
+		user = Fubi::getUser(userID);
+		if(user->m_inScene && !trackingStates[userID])
+		{
+			//Tracking starts
+			trackingStates[userID] = true;
+			oscpkt::Message trackingMsg;
+			std::string trackingMessage;
+			trackingMessage += "/FUBI/Tracking/User";
+			trackingMsg.init(trackingMessage);
+			trackingMsg.pushInt32(userID);
+			trackingMsg.pushBool(trackingStates[userID]);
+
+			pw.startBundle().addMessage(trackingMsg).endBundle();
+			sock.sendPacket(pw.packetData(), pw.packetSize());
+			trackingMsg.clear();
+			std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;
+		}
+		if(!user->m_inScene && trackingStates[userID])
+		{
+			// Tracking ends
+			trackingStates[userID] = false;
+			oscpkt::Message trackingMsg;
+			std::string trackingMessage;
+			trackingMessage += "/FUBI/Tracking/User";
+			trackingMsg.init(trackingMessage);
+			trackingMsg.pushInt32(userID);
+			trackingMsg.pushBool(trackingStates[userID]);
+
+			pw.startBundle().addMessage(trackingMsg).endBundle();
+			sock.sendPacket(pw.packetData(), pw.packetSize());
+			trackingMsg.clear();
+			std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;		
+		}
+	}
+}
+//
 void glutIdle (void)
 {
 	// Display the frame
@@ -236,7 +248,12 @@ void glutDisplay (void)
 
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
-
+//
+	// Check users tracking state
+	std::deque<unsigned int> usersIDs = getClosestUserIDs(15);
+	if(usersIDs.size()>0)
+		checkTrackingState(usersIDs);
+//
 	// Check closest user's gestures
 	unsigned int closestID = getClosestUserID();
 	if (closestID > 0)
@@ -386,7 +403,7 @@ int main(int argc, char ** argv)
 	// All known combination recognizers will be started automatically for new users
 	setAutoStartCombinationRecognition(true);
 //
-    std::string recognizersFile("MashtaCycleRecognizers.xml");
+    std::string recognizersFile("TutorialRecognizers.xml");
 #if defined(__APPLE__) && !defined(USE_DEBUG)
     std::string appPath(argv[0]);
     std::string suffix(".app");
