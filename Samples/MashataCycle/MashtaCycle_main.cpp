@@ -58,7 +58,13 @@ const int OSC_PORT = 9000;
 const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 const char* comboName;
+const bool sendPosition = true;
 std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > combinationsJoints;
+// position filtering
+#define FILTER_SIZE 15
+float torsoPositionsX[FILTER_SIZE];
+float torsoPositionsZ[FILTER_SIZE];
+int positionIndex = 0;
 
 
 // Function called each frame for all tracked users
@@ -119,11 +125,11 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 	unsigned int userID;
 	oscpkt::PacketWriter pw;
 
-	for(int i=0; i<usersIDs.size(); i++)
+	for(unsigned int i=0; i<usersIDs.size(); i++)
 	{
 		userID = usersIDs[i];
 		user = Fubi::getUser(userID);
-		if(user->m_inScene && !trackingStates[userID])
+		if(user->m_isTracked && user->m_inScene && !trackingStates[userID])
 		{
 			//Tracking starts
 			trackingStates[userID] = true;
@@ -139,7 +145,7 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 			trackingMsg.clear();
 			std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;
 		}
-		if(!user->m_inScene && trackingStates[userID])
+		if((!user->m_inScene || !user->m_isTracked) && trackingStates[userID])
 		{
 			// Tracking ends
 			trackingStates[userID] = false;
@@ -155,6 +161,51 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 			trackingMsg.clear();
 			std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;		
 		}
+	}
+}
+
+float simpleAverage(float tab[], int tabSize)
+{
+	float mean = 0;
+	for (int i=0; i<tabSize; i++)
+		mean += tab[i];
+	return mean/tabSize;
+}
+
+void sendXZTorsoPosition(unsigned int userID)
+{
+	FubiUser* user = Fubi::getUser(userID);
+	const Vec3f& torsoPosition = user->m_currentTrackingData.jointPositions[SkeletonJoint::TORSO].m_position;
+	torsoPositionsX[positionIndex] = torsoPosition.x;
+	torsoPositionsZ[positionIndex] = torsoPosition.z;
+
+	positionIndex = (positionIndex + 1) % FILTER_SIZE;
+
+	//send half of the values to not overload OSC
+	if(positionIndex%2 == 0)
+	{
+		float x, z;
+		//test without filter
+		//x = torsoPosition.x;
+		//z = torsoPosition.z;
+		
+		// with filter (simple running average)
+		x = simpleAverage(torsoPositionsX, FILTER_SIZE);
+		z = simpleAverage(torsoPositionsZ, FILTER_SIZE);
+		
+		oscpkt::PacketWriter pw;
+		oscpkt::Message trackingMsg;
+		std::string trackingMessage;
+		trackingMessage += "/FUBI/Position";
+		trackingMsg.init(trackingMessage);
+		trackingMsg.pushInt32(userID);
+		trackingMsg.pushFloat(x);
+		trackingMsg.pushFloat(z);
+
+		pw.startBundle().addMessage(trackingMsg).endBundle();
+		sock.sendPacket(pw.packetData(), pw.packetSize());
+		trackingMsg.clear();
+		std::cout << "sendind OSC message: \"/FUBI/Position " << userID << " " << x << " " << z << "\"" << std::endl;
 	}
 }
 //
@@ -255,6 +306,9 @@ void glutDisplay (void)
 	unsigned int closestID = getClosestUserID();
 	if (closestID > 0)
 	{
+		if(sendPosition && trackingStates[closestID])
+			sendXZTorsoPosition(closestID);
+		
 		checkPostures(closestID);
 	}
 

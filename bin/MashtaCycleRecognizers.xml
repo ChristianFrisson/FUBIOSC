@@ -248,13 +248,6 @@
     </State>
   </CombinationRecognizer>
 
-  <!-- navigating -->
-<CombinationRecognizer name="TorsoPosition">
-    <State minDuration="0.05">
-      <Recognizer name="torsoVertical"/>
-    </State>
-  </CombinationRecognizer>
-
   <!-- right hand position relative to left arm -->
   <CombinationRecognizer name="RightHandNearLeftArm">
     <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
