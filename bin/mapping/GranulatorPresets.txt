@@ -1,0 +1,2 @@
+x:0.25 y:0.75 mass:2 voices:5 randomness:0 stretch:10 duration:1000 ramp:25 offset:250 delay:2500
+x:0.75 y:0.35 mass:1.6 voices:15 randomness:0.7 stretch:500 duration:7500 ramp:100 offset:750 delay:7500
