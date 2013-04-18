@@ -286,6 +286,20 @@
 #X msg 381 32 4;
 #X obj 1070 63 routeOSC /RightHandSlapsLeftHand;
 #X obj 851 -118 routeOSC /Combination;
+#X obj 489 485 counter;
+#X obj 489 509 counter;
+#X obj 489 533 counter;
+#X obj 489 557 counter;
+#X obj 489 580 counter;
+#X obj 489 604 counter;
+#X floatatom 567 493 5 0 0 0 - - -;
+#X floatatom 567 516 5 0 0 0 - - -;
+#X floatatom 566 539 5 0 0 0 - - -;
+#X floatatom 565 561 5 0 0 0 - - -;
+#X floatatom 565 584 5 0 0 0 - - -;
+#X floatatom 564 607 5 0 0 0 - - -;
+#X obj 518 444 bng 20 250 50 0 empty empty reset 21 7 0 10 -262144
+-1 -1;
 #X connect 0 0 5 0;
 #X connect 0 0 6 0;
 #X connect 0 0 7 0;
@@ -315,6 +329,7 @@
 #X connect 18 0 24 0;
 #X connect 20 0 24 0;
 #X connect 21 0 24 0;
+#X connect 22 0 217 0;
 #X connect 23 0 216 0;
 #X connect 25 0 24 0;
 #X connect 31 0 33 0;
@@ -341,6 +356,7 @@
 #X connect 47 0 189 0;
 #X connect 48 0 190 0;
 #X connect 49 0 193 0;
+#X connect 50 0 218 0;
 #X connect 51 0 53 0;
 #X connect 52 0 54 0;
 #X connect 53 0 55 1;
@@ -365,6 +381,7 @@
 #X connect 67 0 189 0;
 #X connect 68 0 190 0;
 #X connect 69 0 193 0;
+#X connect 70 0 219 0;
 #X connect 71 0 73 0;
 #X connect 72 0 74 0;
 #X connect 73 0 75 1;
@@ -389,6 +406,7 @@
 #X connect 87 0 189 0;
 #X connect 88 0 190 0;
 #X connect 89 0 193 0;
+#X connect 90 0 220 0;
 #X connect 91 0 93 0;
 #X connect 92 0 94 0;
 #X connect 93 0 95 1;
@@ -413,6 +431,7 @@
 #X connect 107 0 189 0;
 #X connect 108 0 190 0;
 #X connect 109 0 193 0;
+#X connect 110 0 221 0;
 #X connect 111 0 113 0;
 #X connect 112 0 114 0;
 #X connect 113 0 115 1;
@@ -437,6 +456,7 @@
 #X connect 127 0 189 0;
 #X connect 128 0 190 0;
 #X connect 129 0 193 0;
+#X connect 130 0 222 0;
 #X connect 131 0 133 0;
 #X connect 132 0 134 0;
 #X connect 133 0 135 1;
@@ -569,4 +589,16 @@
 #X connect 216 0 11 0;
 #X connect 216 0 207 0;
 #X connect 216 0 215 0;
+#X connect 217 0 223 0;
+#X connect 218 0 224 0;
+#X connect 219 0 225 0;
+#X connect 220 0 226 0;
+#X connect 221 0 227 0;
+#X connect 222 0 228 0;
+#X connect 229 0 217 3;
+#X connect 229 0 218 3;
+#X connect 229 0 219 3;
+#X connect 229 0 220 3;
+#X connect 229 0 221 3;
+#X connect 229 0 222 3;
 #X coords 0 -1 1 1 340 190 2 100 100;

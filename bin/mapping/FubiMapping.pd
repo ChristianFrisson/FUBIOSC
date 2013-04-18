@@ -1,6 +1,7 @@
-#N canvas 810 83 349 677 10;
+#N canvas 1329 0 370 788 10;
 #X declare -lib mrpeach;
-#X obj 3 -55 fubi.to.mc.osc.events;
-#X obj 3 137 fubi.to.mc.osc.continuous;
-#X obj 4 -168 fubi.to.mc.osc.positions.xy;
-#X obj 183 -168 fubi.to.mc.osc.connect;
+#X obj -13 -91 fubi.to.mc.osc.events;
+#X obj -13 102 fubi.to.mc.osc.continuous;
+#X obj 167 -215 fubi.to.mc.osc.positions.xy;
+#X obj -12 -298 fubi.to.mc.osc.connect;
+#X obj -12 -215 ipad.to.mc.osc.cursor;

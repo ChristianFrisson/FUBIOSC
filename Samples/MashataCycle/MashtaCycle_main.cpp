@@ -58,11 +58,12 @@ const int OSC_PORT = 9000;
 const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 const char* comboName;
-const bool sendPosition = true;
+bool sendPosition = true;
 std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > combinationsJoints;
 // position filtering
-#define FILTER_SIZE 15
+#define FILTER_SIZE 7
 float torsoPositionsX[FILTER_SIZE];
+float torsoPositionsY[FILTER_SIZE];
 float torsoPositionsZ[FILTER_SIZE];
 int positionIndex = 0;
 
@@ -164,12 +165,41 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 	}
 }
 
-float simpleAverage(float tab[], int tabSize)
+float simpleAverageFilter(float tab[])
 {
 	float mean = 0;
-	for (int i=0; i<tabSize; i++)
+	for (int i=0; i<FILTER_SIZE; i++)
 		mean += tab[i];
-	return mean/tabSize;
+	return mean/FILTER_SIZE;
+}
+
+float medianFilter(const float tab[])
+{
+	float medianTab[FILTER_SIZE];
+	for(int i=0; i<FILTER_SIZE; i++)
+		medianTab[i] = tab[i];
+
+	bool sorted = false;
+	float temp = 0;
+	while(!sorted)
+	{
+		sorted = true;
+		for(int j=0; j<FILTER_SIZE-1; j++)
+		{
+			if(medianTab[j] > medianTab[j+1])
+			{
+				temp = medianTab[j+1];
+				medianTab[j+1] = medianTab[j];
+				medianTab[j] = temp;
+				sorted = false;
+			}
+		}
+	}
+	if(FILTER_SIZE %2 == 0)
+		return (medianTab[FILTER_SIZE/2-1]+ medianTab[FILTER_SIZE/2])/2;
+	else
+		return medianTab[FILTER_SIZE/2];
+
 }
 
 void sendXZTorsoPosition(unsigned int userID)
@@ -177,22 +207,30 @@ void sendXZTorsoPosition(unsigned int userID)
 	FubiUser* user = Fubi::getUser(userID);
 	const Vec3f& torsoPosition = user->m_currentTrackingData.jointPositions[SkeletonJoint::TORSO].m_position;
 	torsoPositionsX[positionIndex] = torsoPosition.x;
+	torsoPositionsY[positionIndex] = torsoPosition.y;
 	torsoPositionsZ[positionIndex] = torsoPosition.z;
 
 	positionIndex = (positionIndex + 1) % FILTER_SIZE;
 
 	//send half of the values to not overload OSC
-	if(positionIndex%2 == 0)
+	if(sendPosition)
 	{
-		float x, z;
+		float x, y, z;
 		//test without filter
 		//x = torsoPosition.x;
+		//y = torsoPosition.y
 		//z = torsoPosition.z;
 		
 		// with filter (simple running average)
-		x = simpleAverage(torsoPositionsX, FILTER_SIZE);
-		z = simpleAverage(torsoPositionsZ, FILTER_SIZE);
+		//x = simpleAverageFilter(torsoPositionsX);
+		//y = simpleAverageFilter(torsoPositionsY);
+		//z = simpleAverageFilter(torsoPositionsZ);
 		
+		// with median filter
+		x = medianFilter(torsoPositionsX);
+		y = medianFilter(torsoPositionsY);
+		z = medianFilter(torsoPositionsZ);
+
 		oscpkt::PacketWriter pw;
 		oscpkt::Message trackingMsg;
 		std::string trackingMessage;
@@ -207,6 +245,7 @@ void sendXZTorsoPosition(unsigned int userID)
 		trackingMsg.clear();
 		std::cout << "sendind OSC message: \"/FUBI/Position " << userID << " " << x << " " << z << "\"" << std::endl;
 	}
+	sendPosition = !sendPosition;
 }
 //
 void glutIdle (void)
@@ -306,7 +345,7 @@ void glutDisplay (void)
 	unsigned int closestID = getClosestUserID();
 	if (closestID > 0)
 	{
-		if(sendPosition && trackingStates[closestID])
+		if(trackingStates[closestID])
 			sendXZTorsoPosition(closestID);
 		
 		checkPostures(closestID);

@@ -90,7 +90,7 @@
 -1 -1 0 1;
 #X obj 226 324 vsl 20 120 0 1 0 0 empty empty Reverb_mix 0 -9 0 10
 -203904 -1 -1 0 1;
-#X obj 299 343 hsl 120 20 0 1 0 0 empty empty Pan -2 -8 0 10 -232576
+#X obj 301 320 hsl 120 20 0 1 0 0 empty empty Pan -2 -8 0 10 -232576
 -1 -1 0 1;
 #X obj 631 -184 routeOSC /RightHandNearLeftArm;
 #X text 140 141 RightHandNearLeftArm;
