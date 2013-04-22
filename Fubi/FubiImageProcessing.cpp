@@ -15,9 +15,7 @@
 
 // OpenCV includes
 #if defined USE_OPENCV || defined USE_OPENCV_22
-#ifndef USE_OPENCV
 #	define USE_OPENCV
-#endif
 #	include "opencv/cv.h"
 #	include "opencv/highgui.h"
 #	include <opencv/cxcore.h>
@@ -78,7 +76,8 @@ const float FubiImageProcessing::m_colors[MaxUsers+1][3] =
 
 float FubiImageProcessing::m_depthHist[Fubi::MaxDepth];
 unsigned short FubiImageProcessing::m_lastMaxDepth = Fubi::MaxDepth;
-
+double lastTick, currTick, fps;
+int tickIndex = 0;
 
 FubiImageProcessing::FubiImageProcessing()
 {
@@ -97,7 +96,7 @@ bool FubiImageProcessing::getImage(FubiISensor* sensor, unsigned char* outputIma
 	unsigned int renderOptions /*= (RenderOptions::Shapes | RenderOptions::Skeletons | RenderOptions::UserCaptions)*/,
 	DepthImageModification::Modification depthModifications /*= DepthImageModification::UseHistogram*/,
 	unsigned int userId /*= 0*/, Fubi::SkeletonJoint::Joint jointOfInterest /*= Fubi::SkeletonJoint::NUM_JOINTS*/)
-{
+{	
 	bool succes = false;
 	int applyThreshold = 0;
 
@@ -150,6 +149,34 @@ bool FubiImageProcessing::getImage(FubiISensor* sensor, unsigned char* outputIma
 
 	if (width <= 0 || height <= 0)
 		succes = false; // No valid image created
+//adding fps display
+	if(succes)
+	{
+#ifdef USE_OPENCV
+		if(tickIndex == 0)
+		{
+			currTick = Fubi::getCurrentTime();
+			fps = 30.0/(currTick-lastTick);
+			lastTick = currTick;
+		}
+
+		std::string s = "fps:";
+		std::ostringstream os;
+		os << setprecision(3) << fps;
+		s += os.str();
+		
+		IplImage* image = cvCreateImageHeader(cvSize(width, height), (depth == ImageDepth::D8) ? IPL_DEPTH_8U : IPL_DEPTH_16U, numChannels);
+		image->imageData = (char*) outputImage;
+		
+		CvFont font;
+		cvInitFont(&font, CV_FONT_HERSHEY_DUPLEX, 0.5, 0.6, 0, 1);
+		cvPutText(image, s.c_str(), cvPoint(8, 12), &font, cvScalar(255, 255, 255, 255));
+		cvReleaseImageHeader(&image);
+
+		tickIndex = (tickIndex+1) % 30;
+#endif
+	}
+//	
 
 	// "Crops" image if user is set
 	if (succes && userId != 0)
@@ -252,14 +279,14 @@ void FubiImageProcessing::drawFingerCountImage(unsigned int userID, bool leftHan
 							double dAlpha = 1.0 - alpha;
 							if (numChannels == 1)
 							{
-								unsigned short greyValue = (unsigned short)(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
-								pDestImage[0] = (unsigned short)(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
+								unsigned short greyValue = unsigned short(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
+								pDestImage[0] = unsigned short(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
 							}
 							else
 							{
-								pDestImage[0] = (unsigned short)(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
-								pDestImage[1] = (unsigned short)(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
-								pDestImage[2] = (unsigned short)(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
+								pDestImage[0] = unsigned short(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
+								pDestImage[1] = unsigned short(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
+								pDestImage[2] = unsigned short(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
 								
 								if (numChannels == 4)
 								{
@@ -292,14 +319,14 @@ void FubiImageProcessing::drawFingerCountImage(unsigned int userID, bool leftHan
 							double dAlpha = 1.0 - alpha;
 							if (numChannels == 1)
 							{
-								unsigned char greyValue = (unsigned char)(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
-								pDestImage[0] = (unsigned char)(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
+								unsigned char greyValue = unsigned char(0.114*pfImage[0] + 0.587*pfImage[1] + 0.299*pfImage[2]);
+								pDestImage[0] = unsigned char(alpha*greyValue + dAlpha*pDestImage[0] + 0.5);
 							}
 							else
 							{
-								pDestImage[0] = (unsigned char)(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
-								pDestImage[1] = (unsigned char)(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
-								pDestImage[2] = (unsigned char)(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
+								pDestImage[0] = unsigned char(alpha*pfImage[0] + dAlpha*pDestImage[0] + 0.5);
+								pDestImage[1] = unsigned char(alpha*pfImage[1] + dAlpha*pDestImage[1] + 0.5);
+								pDestImage[2] = unsigned char(alpha*pfImage[2] + dAlpha*pDestImage[2] + 0.5);
 								
 								if (numChannels == 4)
 								{
