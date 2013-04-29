@@ -1,4 +1,4 @@
-#N canvas 1329 0 370 788 10;
+#N canvas 1528 7 370 764 10;
 #X declare -lib mrpeach;
 #X obj -13 -91 fubi.to.mc.osc.events;
 #X obj -13 102 fubi.to.mc.osc.continuous;

@@ -1,19 +1,19 @@
-#N canvas 703 170 844 646 10;
+#N canvas 705 8 844 793 10;
 #X floatatom 239 -381 5 0 0 0 - - -;
 #X floatatom 191 -382 5 0 0 0 - - -;
 #X obj 112 -182 vsl 12 80 -1 1 0 0 empty empty empty 0 -9 0 10 -4032
--1 -1 0 1;
+-1 -1 7900 1;
 #X obj 135 -201 hsl 80 12 -1 1 0 0 empty empty empty -2 -8 0 10 -4032
--1 -1 6256 1;
-#X obj 236 -77 t b f;
-#X obj 220 -41 pack f f;
-#X msg 218 -14 /mediacycle/browser/0/hover/xy \$1 \$2;
+-1 -1 4736 1;
+#X obj 168 304 t b f;
+#X obj 152 340 pack f f;
+#X msg 150 367 /mediacycle/browser/0/hover/xy \$1 \$2;
 #X obj 327 -497 r oscfromfubi;
-#X obj 469 21 s osctomc;
+#X obj 391 402 s osctomc;
 #X obj 131 -125 nbx 5 24 -1 1 0 0 empty empty y 0 -12 0 16 -204800
--1 -1 -1 256;
+-1 -1 1 256;
 #X obj 132 -169 nbx 5 24 -1 1 0 0 empty empty x 0 -12 0 16 -204800
--1 -1 0.583797 256;
+-1 -1 0.198987 256;
 #X obj 358 -412 unpack f f;
 #X obj 358 -437 routeOSC /User;
 #X obj 415 -378 tgl 15 0 empty empty is_in_scene 17 7 0 10 -262144
@@ -39,11 +39,11 @@
 #X obj 337 -231 cnv 15 200 60 empty empty empty 20 12 0 14 -258113
 -66577 0;
 #X msg 340 -207 /addcursor \$1;
-#X obj 211 -465 routeOSC /Position;
+#X obj 222 -474 routeOSC /Position;
 #X floatatom 135 -383 5 0 0 0 userID - -;
 #X msg 436 -152 send /mediacycle/browser/0/released;
-#X obj 100 100 grid TUIO 160 -1 1 120 -1 1 1 0.01 0.01 1 1 226.704
-219;
+#X obj 100 100 grid TUIO 160 -1 1 120 -1 1 1 0.01 0.01 1 1 195.919
+100;
 #X obj 99 56 pack f f;
 #X obj 123 33 t b f;
 #X obj -109 -16 loadbang;
@@ -53,23 +53,26 @@
 #X obj 84 -1 * 80;
 #X obj 112 -86 - 1;
 #X obj 123 0 * -60;
-#X obj 194 -410 unpack f f f f;
+#X obj 232 -449 unpack f f f f;
 #X msg -128 -436 2;
 #X msg -128 -403 1.5;
-#X msg -127 -369 1.5;
 #X floatatom 58 -182 5 0 0 0 - - -;
 #X obj 9 -300 t b f;
 #X obj 86 -317 /;
 #X msg 56 -340 -2;
 #X obj 56 -367 t b f;
 #X obj 9 -323 *;
+#X floatatom 114 281 5 0 0 0 - - -;
+#X floatatom 218 281 5 0 0 0 - - -;
+#X obj 76 -475 routeOSC /Combination;
+#X obj 75 -452 routeOSC /BothHandsDown;
+#X obj 75 -426 unpack s f f f;
+#X msg -127 -369 2;
 #X connect 0 0 22 0;
 #X connect 1 0 20 0;
 #X connect 2 0 9 0;
-#X connect 2 0 4 0;
 #X connect 2 0 45 0;
 #X connect 3 0 10 0;
-#X connect 3 0 5 0;
 #X connect 3 0 43 0;
 #X connect 4 0 5 0;
 #X connect 4 1 5 1;
@@ -77,6 +80,7 @@
 #X connect 6 0 8 0;
 #X connect 7 0 28 0;
 #X connect 7 0 34 0;
+#X connect 7 0 58 0;
 #X connect 11 0 14 0;
 #X connect 11 1 13 0;
 #X connect 12 0 11 0;
@@ -87,27 +91,27 @@
 #X connect 15 0 21 0;
 #X connect 16 0 24 0;
 #X connect 16 1 24 1;
-#X connect 17 0 55 0;
-#X connect 18 0 56 0;
+#X connect 17 0 54 0;
+#X connect 18 0 55 0;
 #X connect 19 0 48 0;
 #X connect 19 0 49 0;
-#X connect 19 0 50 0;
+#X connect 19 0 61 0;
 #X connect 20 0 23 0;
 #X connect 21 0 16 0;
 #X connect 22 0 24 0;
 #X connect 23 0 25 0;
 #X connect 24 0 3 0;
 #X connect 25 0 2 0;
-#X connect 25 0 51 0;
+#X connect 25 0 50 0;
 #X connect 26 0 25 1;
 #X connect 27 0 26 0;
 #X connect 28 0 12 0;
 #X connect 29 0 31 1;
 #X connect 30 0 33 0;
 #X connect 31 0 36 0;
-#X connect 33 0 8 0;
-#X connect 34 0 47 0;
 #X connect 36 0 8 0;
+#X connect 37 0 56 0;
+#X connect 37 1 57 0;
 #X connect 38 0 42 0;
 #X connect 39 0 38 0;
 #X connect 39 1 38 1;
@@ -123,13 +127,19 @@
 #X connect 47 3 1 0;
 #X connect 48 0 15 0;
 #X connect 49 0 17 0;
-#X connect 50 0 18 0;
-#X connect 52 0 27 0;
-#X connect 52 1 26 1;
-#X connect 53 0 23 1;
-#X connect 53 0 56 1;
+#X connect 51 0 27 0;
+#X connect 51 1 26 1;
+#X connect 52 0 23 1;
+#X connect 52 0 55 1;
+#X connect 53 0 52 0;
 #X connect 54 0 53 0;
-#X connect 55 0 54 0;
-#X connect 55 1 53 1;
-#X connect 56 0 52 0;
+#X connect 54 1 52 1;
+#X connect 55 0 51 0;
+#X connect 56 0 5 0;
+#X connect 57 0 4 0;
+#X connect 58 0 59 0;
+#X connect 59 0 60 0;
+#X connect 60 1 0 0;
+#X connect 60 3 1 0;
+#X connect 61 0 18 0;
 #X coords 0 -1 1 1 160 120 2 100 100;

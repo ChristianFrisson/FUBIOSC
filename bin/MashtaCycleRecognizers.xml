@@ -22,6 +22,10 @@
     <Joints main="leftHand" relative="leftShoulder"/>
     <MaxValues z="-400"/>
   </JointRelationRecognizer>
+  <JointRelationRecognizer name="rightHandBack" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <MinValues z="-300"/>
+  </JointRelationRecognizer>
   <JointRelationRecognizer name="leftHandBack" visibility="hidden">
     <Joints main="leftHand" relative="leftShoulder"/>
     <MinValues z="-300"/>
@@ -33,6 +37,15 @@
     <JointRelationRecognizer name="rightHandAboveHead" visibility="hidden">
     <Joints main="rightHand" relative="head"/>
     <MinValues y="1"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="rightHandInHeadHeight" visibility="hidden">
+    <Joints main="rightHand" relative="head"/>
+    <MinValues y="-200"/>
+    <MaxValues y="200"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="leftHandNearHead" visibility="hidden">
+    <Joints main="leftHand" relative="head"/>
+    <MaxValues dist="200"/>
   </JointRelationRecognizer>
   <JointRelationRecognizer name="rightHandNearHead" visibility="hidden">
     <Joints main="rightHand" relative="head"/>
@@ -66,7 +79,34 @@
   </JointRelationRecognizer>
   <JointRelationRecognizer name="handsTogether" visibility="hidden">
     <Joints main="rightHand" relative="leftHand"/>
-    <MaxValues dist="100"/>
+    <MaxValues dist="150"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="leftHandDown" visibility="hidden">
+    <Joints main="leftHand" relative="leftHip"/>
+    <MaxValues x="150" y="0" z="250"/>
+    <MinValues x="-350" y="-500" z="-250"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="rightHandDown" visibility="hidden">
+    <Joints main="rightHand" relative="rightHip"/>
+    <MaxValues x="350" y="0" z="250"/>
+    <MinValues x="-150" y="-500" z="-250"/>
+  </JointRelationRecognizer>
+  
+  <JointRelationRecognizer name="leftHandRightOfBody" visibility="hidden">
+    <Joints main="leftHand" relative="torso"/>
+    <MinValues x="150" y="-600" z="-500"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="leftHandLeftOfBody" visibility="hidden">
+    <Joints main="leftHand" relative="torso"/>
+    <MaxValues x="-150" y="600" z="500"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="rightHandRightOfBody" visibility="hidden">
+    <Joints main="rightHand" relative="torso"/>
+    <MinValues x="150" y="-600" z="-500"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="rightHandLeftOfBody" visibility="hidden">
+    <Joints main="rightHand" relative="torso"/>
+    <MaxValues x="-150" y="600" z="500"/>
   </JointRelationRecognizer>
 
   <!-- Linear movement recognizers -->
@@ -88,12 +128,42 @@
   <LinearMovementRecognizer name="leftHandMovesUp" visibility="hidden">
     <Joints main="leftHand" relative="leftShoulder"/>
     <Direction x="0" y="2" z="0"/>
+    <Speed min="150"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="rightHandMovesRight" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <Direction x="2" y="0" z="0"/>
+    <Speed min="150"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="rightHandMovesDown" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <Direction x="0" y="-2" z="0"/>
     <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="rightHandMovesLeft" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <Direction x="-2" y="0" z="0"/>
+    <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="rightHandMovesUp" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <Direction x="0" y="2" z="0"/>
+    <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="leftHandMovesForward" visibility="hidden">
+    <Joints main="leftHand" relative="leftShoulder"/>
+    <Direction x="0" y="0" z="-1"/>
+    <Speed min="150"/>
   </LinearMovementRecognizer>
   <LinearMovementRecognizer name="rightHandMovesForward" visibility="hidden">
     <Joints main="rightHand" relative="rightShoulder"/>
     <Direction x="0" y="0" z="-1"/>
    <Speed min="150"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="leftHandMovesBackward" visibility="hidden">
+    <Joints main="leftHand" relative="leftShoulder"/>
+    <Direction x="0" y="0" z="1"/>
+    <Speed min="150"/>
   </LinearMovementRecognizer>
   <LinearMovementRecognizer name="rightHandMovesBackward" visibility="hidden">
     <Joints main="rightHand" relative="rightShoulder"/>
@@ -105,146 +175,47 @@
     <Direction x="-1" y="-1" z="-1"/>
     <Speed min="200"/>
   </LinearMovementRecognizer>
-  <LinearMovementRecognizer name="rightHandRightTC" visibility="visible">
-    <Joints main="rightWrist"/>
-    <Direction x="1" y="0" z="0" maxAngleDifference="60"/>
-    <Speed min="300"/>
-  </LinearMovementRecognizer>
-  <LinearMovementRecognizer name="rightHandDownTC" visibility="visible">
-    <Joints main="rightWrist"/>
-    <Direction x="0" y="-1" z="0" maxAngleDifference="60"/>
-    <Speed min="300"/>
-  </LinearMovementRecognizer>
-  <LinearMovementRecognizer name="rightHandLeftTC" visibility="visible">
-    <Joints main="rightWrist"/>
-    <Direction x="-1" y="0" z="0" maxAngleDifference="60"/>
-    <Speed min="300"/>
-  </LinearMovementRecognizer>
-  <LinearMovementRecognizer name="leftHandLeftTC" visibility="visible">
-    <Joints main="leftWrist"/>
-    <Direction x="-1" y="0" z="0" maxAngleDifference="60"/>
-    <Speed min="300"/>
-  </LinearMovementRecognizer>
-  <LinearMovementRecognizer name="leftHandDownTC" visibility="visible">
-    <Joints main="leftWrist"/>
-    <Direction x="0" y="-1" z="0" maxAngleDifference="60"/>
-    <Speed min="300"/>
-  </LinearMovementRecognizer>
-  <LinearMovementRecognizer name="leftHandRightTC" visibility="visible">
-    <Joints main="leftWrist"/>
-    <Direction x="1" y="0" z="0" maxAngleDifference="60"/>
-    <Speed min="300"/>
-  </LinearMovementRecognizer>
 
   <!-- ************ -->
   <!-- Combinations -->
   <!-- ************ -->
+  
+  <!--Navigating in the map-->
+  <CombinationRecognizer name="BothHandsDown">
+    <State minDuration="0" maxDuration="0.05">
+      <Recognizer name="torsoVertical"/>
+      <Recognizer name="leftHandDown"/>
+      <Recognizer name="rightHandDown"/>
+    </State>
+  </CombinationRecognizer>
+  
   <!-- Left hand waving above head -->
   <CombinationRecognizer name="LeftHandWavingAboveHead">
-    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.5">
       <Recognizer name="leftHandAboveHead"/>
       <Recognizer name="leftHandMovesLeft"/>
     </State>
-    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+    <State minDuration="0.1">
       <Recognizer name="leftHandAboveHead"/>
       <Recognizer name="leftHandMovesRight"/>
-    </State>
-    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
-      <Recognizer name="leftHandAboveHead"/>
-      <Recognizer name="leftHandMovesLeft"/>
-    </State>
-  </CombinationRecognizer>
-  
-   <!-- circle clockwise with left hand -->
-  <CombinationRecognizer name="LeftHandCircleClockwise">
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesRight"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesDown"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesLeft"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesUp"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-  </CombinationRecognizer>
-  
-  <!-- simple circle anticlockwise with left hand-->
-  <CombinationRecognizer name="LeftHandCircleAntiClockwise">
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesLeft"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesDown"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesRight"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-    </State>
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="leftHandMovesUp"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
     </State>
   </CombinationRecognizer>
 
   <!-- right hand pushing -->
   <CombinationRecognizer name="RightHandPushAboveShoulder">
-    <State minDuration="0.2" maxDuration="0.6" timeForTransition="0.4">
+    <State minDuration="0.1" maxDuration="0.8" timeForTransition="0.4">
       <Recognizer name="rightHandAboveShoulder"/>
       <Recognizer name ="rightHandMovesForward"/>
 	  <NotRecognizer name="rightHandNearHead"/>
     </State>
-    <State minDuration="0.1" maxDuration="0.6" timeForTransition="0.2">
+    <State minDuration="0.3" maxDuration="1.8" timeForTransition="0.2">
       <Recognizer name="rightHandAboveShoulder"/>
-	  <Recognizer name="rightHandInFront"/>
+	    <NotRecognizer name="rightHandBack"/>
     </State>
-    <State minDuration="0.2" maxDuration="0.6" timeForTransition="0.2">
+    <State minDuration="0.1">
       <Recognizer name="rightHandAboveShoulder"/>
       <Recognizer name="rightHandMovesBackward"/>
 	  <NotRecognizer name="rightHandNearHead"/>
-    </State>
-  </CombinationRecognizer>
-
-  <!--Square with two hands-->
-  <CombinationRecognizer name="SquareWithTwoHands">
-    <State maxDuration="1" minDuration="0.2" maxInterruptionTime="0.08" timeForTransition="1">
-      <Recognizer name="rightHandRightTC"/>
-      <Recognizer name="leftHandLeftTC"/>
-    </State>
-    <State maxDuration="1" minDuration="0.15" maxInterruptionTime="0.08" timeForTransition="1">
-      <Recognizer name="rightHandDownTC"/>
-      <Recognizer name="leftHandDownTC"/>
-    </State>
-    <State minDuration="0.15" maxInterruptionTime="0.15">
-      <Recognizer name="rightHandLeftTC"/>
-      <Recognizer name="leftHandRightTC"/>
-    </State>
-  </CombinationRecognizer>
-
-  <!--Right hand slpas left hand in front -->
-  <CombinationRecognizer name="RightHandSlapsLeftHand">
-    <State minDuration="0.2" timeForTransition="1" maxInterruptionTime="0.15">
-      <Recognizer name="leftHandInFront"/>
-      <Recognizer name="rightHandMovesForward"/>
-      <NotRecognizer name="leftHandAboveShoulder"/>
-      <NotRecognizer name="handsTogether"/>
-    </State>
-    <State maxDuration="1" minDuration="0.1" timeForTransition="1" maxInterruptionTime="0.15">
-      <Recognizer name="leftHandInFront"/>
-      <Recognizer name="handsTogether"/>
-    </State>
-    <State minDuration="0.1" maxInterruptionTime="0.15">
-      <Recognizer name="leftHandInFront"/>
-      <NotRecognizer name="handsTogether"/>
-      <Recognizer name="rightHandMovesBackward"/>
     </State>
   </CombinationRecognizer>
 
@@ -261,28 +232,10 @@
       </AlternativeRecognizers>
     </State>
   </CombinationRecognizer>
-  
-  <!-- get left hand orientation when right hand near head-->
-  <CombinationRecognizer name="LeftHandOrientation1">
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="rightHandNearHead"/>
-      <NotRecognizer name ="leftHandAboveShoulder"/>
-    </State>
-  </CombinationRecognizer>
-  
-  <!-- get left hand orientation when right hand in front of shoulder-->
-  <CombinationRecognizer name="LeftHandOrientation2">
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
-      <Recognizer name="rightHandInFront"/>
-      <NotRecognizer name ="rightHandAboveShoulder"/>
-      <NotRecognizer name ="leftHandAboveShoulder"/>
-      <Recognizer name="leftHandBack"/>
-    </State>
-  </CombinationRecognizer>
 
   <!-- get left hand orientation when right hand pointing right-->
   <CombinationRecognizer name="LeftHandOrientation3">
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
+    <State minDuration="0.1" maxDuration="0.2">
       <Recognizer name="rightHandPointingRight"/>
       <NotRecognizer name="rightHandInFront"/>
       <NotRecognizer name ="rightHandAboveShoulder"/>
@@ -290,4 +243,62 @@
     </State>
   </CombinationRecognizer>
 
+  <!--right hand near pocket and left arm scanning-->
+  <CombinationRecognizer name="LeftHandScanning">
+    <State minDuration="0.1" maxDuration="0.2">
+      <Recognizer name="rightHandDown"/>
+      <Recognizer name="leftHandInFront"/>
+      <NotRecognizer name="leftHandDown"/>
+    </State>
+  </CombinationRecognizer>
+
+  <!--Control parameter with vertical or
+      horizontal distance between hands-->
+  <CombinationRecognizer name="BothHandsInFront">
+    <State minDuration="0.1" maxDuration="0.2">
+      <Recognizer name="rightHandInFront"/>
+      <Recognizer name="leftHandInFront"/>
+      <NotRecognizer name ="leftHandDown"/>
+    </State>
+  </CombinationRecognizer>
+  
+  <!-- Throwing to left with two hands-->
+  <CombinationRecognizer name="ThrowingLeft">
+    <State minDuration="0.2">
+      <Recognizer name="rightHandRightOfBody"/>
+      <Recognizer name="leftHandRightOfBody"/>
+    </State>
+    <State minDuration="0.2" maxDuration="0.8" timeForTransition="0.2">
+      <Recognizer name="rightHandMovesLeft"/>
+      <Recognizer name="leftHandMovesLeft"/>
+    </State>
+    <State minDuration="0.2">
+      <Recognizer name="rightHandLeftOfBody"/>
+      <Recognizer name="leftHandLeftOfBody"/>
+    </State>
+  </CombinationRecognizer>
+
+  <!-- Throwing to right with two hands-->
+  <CombinationRecognizer name="ThrowingRight">
+    <State minDuration="0.2" maxDuration="2.5" timeForTransition="0.2">
+      <Recognizer name="rightHandLeftOfBody"/>
+      <Recognizer name="leftHandLeftOfBody"/>
+    </State>
+    <State minDuration="0.2" maxDuration="0.8" timeForTransition="0.2">
+      <Recognizer name="rightHandMovesRight"/>
+      <Recognizer name="leftHandMovesRight"/>
+    </State>
+    <State minDuration="0.2">
+      <Recognizer name="rightHandRightOfBody"/>
+      <Recognizer name="leftHandRightOfBody"/>
+    </State>
+  </CombinationRecognizer>
+
+  <!-- right hand near head and left hand down-->
+  <CombinationRecognizer name="RightHandNearHead">
+    <State minDuration="0.1" maxDuration="0.2">
+      <Recognizer name="rightHandNearHead"/>
+      <Recognizer name="leftHandDown"/>
+    </State>
+  </CombinationRecognizer>
 </FubiRecognizers>

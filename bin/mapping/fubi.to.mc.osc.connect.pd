@@ -1,4 +1,4 @@
-#N canvas 344 96 753 735 10;
+#N canvas 160 71 893 465 10;
 #X declare -lib mrpeach;
 #X obj 309 33 import mrpeach;
 #X obj -124 239 unpackOSC;
@@ -10,10 +10,10 @@
 #X msg 358 220 send /mediacycle/test;
 #X obj 451 357 packOSC;
 #X obj -125 356 s oscfromfubi;
-#X obj 451 311 r osctomc;
+#X obj 443 254 r osctomc;
 #X floatatom 109 119 5 0 0 2 Port_in_(FUBI) - -;
 #X floatatom 287 117 5 0 0 2 Port_out_(MC) - -;
-#X obj 418 138 tgl 15 0 empty empty empty 17 7 0 10 -4034 -1 -1 0 1
+#X obj 418 138 tgl 15 0 empty empty empty 17 7 0 10 -4034 -1 -1 1 1
 ;
 #X obj 529 357 print ToMC;
 #X obj -62 301 print FromFUBI;
@@ -21,7 +21,7 @@
 #X text 123 137 Print OSC received;
 #X text 322 137 Print OSC send;
 #X msg -123 179 port \$1;
-#X obj 418 114 bng 15 250 50 0 empty empty test -30 5 0 10 -262144
+#X obj 377 120 bng 15 250 50 0 empty empty test -30 5 0 10 -262144
 -1 -1;
 #X obj 122 12 loadbang;
 #X msg 111 367 connect localhost \$1;
@@ -39,12 +39,17 @@
 #X symbolatom 184 160 40 0 0 0 Presets_File - -;
 #X obj 167 212 s grainFile;
 #X msg 244 65 set GranulatorPresets.txt;
+#X msg 134 331 connect 192.168.2.255 3332;
+#X msg 530 221 /mediacycle/list_media_actions;
+#X obj 418 120 bng 15 250 50 0 empty empty getlist -24 -8 0 10 -262144
+-1 -1;
 #X connect 1 0 3 0;
 #X connect 1 0 26 0;
 #X connect 2 0 1 0;
 #X connect 3 0 14 0;
 #X connect 4 0 3 1;
 #X connect 6 0 7 0;
+#X connect 6 0 15 0;
 #X connect 7 0 5 0;
 #X connect 9 0 7 0;
 #X connect 9 0 15 0;
@@ -66,4 +71,8 @@
 #X connect 26 0 8 0;
 #X connect 33 0 34 0;
 #X connect 35 0 33 0;
+#X connect 36 0 5 0;
+#X connect 37 0 7 0;
+#X connect 37 0 15 0;
+#X connect 38 0 37 0;
 #X coords 0 -1 1 1 340 80 2 100 100;
