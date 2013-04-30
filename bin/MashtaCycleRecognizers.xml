@@ -221,7 +221,7 @@
 
   <!-- right hand position relative to left arm -->
   <CombinationRecognizer name="RightHandNearLeftArm">
-    <State minDuration="0.05" maxDuration="0.2" timeForTransition="0.2">
+    <State minDuration="0.05" maxDuration="0.1">
       <Recognizer name="rightHandNearLeftHand"/>
       <Recognizer name ="rightHandNearLeftElbow"/>
       <NotRecognizer name="leftHandInFront"/>
@@ -235,17 +235,16 @@
 
   <!-- get left hand orientation when right hand pointing right-->
   <CombinationRecognizer name="LeftHandOrientation3">
-    <State minDuration="0.1" maxDuration="0.2">
+    <State minDuration="0" maxDuration="0.1">
       <Recognizer name="rightHandPointingRight"/>
       <NotRecognizer name="rightHandInFront"/>
       <NotRecognizer name ="rightHandAboveShoulder"/>
-      <NotRecognizer name ="leftHandAboveShoulder"/>
     </State>
   </CombinationRecognizer>
 
   <!--right hand near pocket and left arm scanning-->
   <CombinationRecognizer name="LeftHandScanning">
-    <State minDuration="0.1" maxDuration="0.2">
+    <State minDuration="0.0" maxDuration="0.1">
       <Recognizer name="rightHandDown"/>
       <Recognizer name="leftHandInFront"/>
       <NotRecognizer name="leftHandDown"/>
@@ -255,7 +254,7 @@
   <!--Control parameter with vertical or
       horizontal distance between hands-->
   <CombinationRecognizer name="BothHandsInFront">
-    <State minDuration="0.1" maxDuration="0.2">
+    <State minDuration="0.0" maxDuration="0.1">
       <Recognizer name="rightHandInFront"/>
       <Recognizer name="leftHandInFront"/>
       <NotRecognizer name ="leftHandDown"/>
