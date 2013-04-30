@@ -11,7 +11,7 @@ typedef struct MessageToSend
 };
 
 
-typedef enum SoundControl
+typedef enum MashtaSoundControl
 {
 	LOOP,
 	STOP,
@@ -25,7 +25,7 @@ typedef enum SoundControl
 };
 
 
-static class MappingMashtaCycle
+class MappingMashtaCycle
 {
 public:
 	MappingMashtaCycle(void);
@@ -48,6 +48,6 @@ private:
 	bool reverbFreeze;
 	float sceneWidth, sceneDepth, sceneDepthOffset;
 
-	std::map<std::string, SoundControl> mapping;
+	std::map<std::string, MashtaSoundControl> mapping;
 };
 

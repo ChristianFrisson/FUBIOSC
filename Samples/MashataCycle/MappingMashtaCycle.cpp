@@ -21,14 +21,14 @@ MappingMashtaCycle::~MappingMashtaCycle(void)
 
 void MappingMashtaCycle::initMapping()
 {
-	mapping["RightHandPushAboveShoulder"] = SoundControl::LOOP;
-	mapping["LeftHandWavingAboveHead"] = SoundControl::STOP;
-	mapping["RightHandNearHead"] = SoundControl::REVERB_FREEZE;
-	mapping["RightHandNearLeftArm"] = SoundControl::VOLUME;
-	mapping["BothHandsInFront"] = SoundControl::SPEED;
-	mapping["LeftHandOrientation3"] = SoundControl::REVERB_MIX;
-	mapping["LeftHandScanning"] = SoundControl::PAN;
-	mapping["BothHandsDown"] = SoundControl::POSITION;
+	mapping["RightHandPushAboveShoulder"] = LOOP;
+	mapping["LeftHandWavingAboveHead"] = STOP;
+	mapping["RightHandNearHead"] = REVERB_FREEZE;
+	mapping["RightHandNearLeftArm"] = VOLUME;
+	mapping["BothHandsInFront"] = SPEED;
+	mapping["LeftHandOrientation3"] = REVERB_MIX;
+	mapping["LeftHandScanning"] = PAN;
+	mapping["BothHandsDown"] = POSITION;
 }
 
 MessageToSend MappingMashtaCycle::getOSCMessage(FubiUser* user, std::string comboName)
@@ -36,7 +36,7 @@ MessageToSend MappingMashtaCycle::getOSCMessage(FubiUser* user, std::string comb
 	MessageToSend mts;
 	mts.text = "";
 
-	std::map<std::string, SoundControl>::iterator  it = mapping.find(comboName);
+	std::map<std::string, MashtaSoundControl>::iterator  it = mapping.find(comboName);
 	
 
     if(it == mapping.end())
@@ -47,28 +47,28 @@ MessageToSend MappingMashtaCycle::getOSCMessage(FubiUser* user, std::string comb
     
 	switch(it->second)
 	{
-		case SoundControl::LOOP:
+		case LOOP:
 			mts = loopMessage();
 			break;
-		case SoundControl::STOP:
+		case STOP:
 			mts = stopMessage();
 			break;
-		case SoundControl::REVERB_FREEZE:
+		case REVERB_FREEZE:
 			mts = reverbFreezeMessage();
 			break;
-		case SoundControl::VOLUME:
+		case VOLUME:
 			mts = volumeMessage(user);
 			break;
-		case SoundControl::SPEED:
+		case SPEED:
 			mts = speedMessage(user);
 			break;
-		case SoundControl::REVERB_MIX:
+		case REVERB_MIX:
 			mts = reverbMixMessage(user);
 			break;
-		case SoundControl::PAN:
+		case PAN:
 			mts = panMessage(user);
 			break;
-		case SoundControl::POSITION:
+		case POSITION:
 			mts = positionMessage(user);
 			break;
 		default:

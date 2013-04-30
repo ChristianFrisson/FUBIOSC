@@ -314,10 +314,10 @@ void glutKeyboard (unsigned char key, int x, int y)
 			// Reload recognizers from xml
 			clearUserDefinedRecognizers();
 //			
-			if (loadRecognizersFromXML("TutorialRecognizers.xml"))
+			if (loadRecognizersFromXML("MashtaCycleRecognizers.xml"))
 			{		
 				printf("Succesfully reloaded recognizers xml!\n");
-				combinationsJoints = getCombinations();
+				//combinationsJoints = getCombinations();
 			}
 //
 		}
@@ -359,7 +359,7 @@ int main(int argc, char ** argv)
 	// All known combination recognizers will be started automatically for new users
 	setAutoStartCombinationRecognition(true);
 //
-    std::string recognizersFile("TutorialRecognizers.xml");
+    std::string recognizersFile("MashtaCycleRecognizers.xml");
 #if defined(__APPLE__) && !defined(USE_DEBUG)
     std::string appPath(argv[0]);
     std::string suffix(".app");
@@ -375,7 +375,7 @@ int main(int argc, char ** argv)
         std::cout << "Couldn't load ";
     std::cout << "the recognizers from xml file " << recognizersFile << std::endl;
 
-	combinationsJoints = getCombinations();
+	//combinationsJoints = getCombinations();
 //
 	#if defined ( WIN32 ) || defined( _WINDOWS )
 		SetWindowPos( GetConsoleWindow(), HWND_TOP, dWidth+10, 0, 0, 0,
