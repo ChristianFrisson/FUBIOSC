@@ -62,17 +62,9 @@ bool trackingStates[16];
 #define OSCPKT_OSTREAM_OUTPUT
 // OSC global variables
 const int OSC_PORT = 3332;
-const std::string host = "192.168.2.255";
+const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 std::string comboName;
-bool halfPositionSending = true;
-std::vector<std::pair<std::string, std::vector<Fubi::SkeletonJoint::Joint> > > combinationsJoints;
-// position filtering
-#define FILTER_SIZE 7
-float torsoPositionsX[FILTER_SIZE];
-float torsoPositionsY[FILTER_SIZE];
-float torsoPositionsZ[FILTER_SIZE];
-int positionIndex = 0;
 MappingMashtaCycle *mapping;
 
 // Function called each frame for all tracked users
@@ -88,44 +80,6 @@ void checkPostures(unsigned int userID)
 		if (getCombinationRecognitionProgressOn(getUserDefinedCombinationRecognizerName(i), userID) == Fubi::RecognitionResult::RECOGNIZED)
 		{
 			comboName = getUserDefinedCombinationRecognizerName(i);
-			//lastComboName = comboName;
-			//joints = getComboJoints(comboName);
-			
-			// send over OSC
-/*			if(sendOSCCombinations)
-			{
-				oscpkt::Message combiMsg;
-				std::string combiMessage;
-				combiMessage += "/FUBI/Combination/";
-				combiMessage += std::string(comboName);
-				combiMsg.init(combiMessage);
-			
-				int nb = 0;
-				for(unsigned int i=0; i<joints.size(); i++)
-				{
-					const Vec3f& jointPosition = user->m_currentTrackingData.jointPositions[joints[i]].m_position;
-					Vec3f jointOrientation = user->m_currentTrackingData.jointOrientations[joints[i]].m_orientation.getRot();
-					jointOrientation.normalize();
-
-					combiMsg.pushStr(getJointName(joints[i]));
-				
-					combiMsg.pushFloat(jointPosition.x);
-					combiMsg.pushFloat(jointPosition.y);
-					combiMsg.pushFloat(jointPosition.z);
-					nb += 3;
-				
-					// msg.pushFloat(jointOrientation.x);
-					// msg.pushFloat(jointOrientation.y);
-					// msg.pushFloat(jointOrientation.z);
-					// nb += 3;
-				}
-				pw.startBundle().addMessage(combiMsg).endBundle();
-				sock.sendPacket(pw.packetData(), pw.packetSize());
-				combiMsg.clear();
-				if(displayOSCMessages)
-					std::cout << "sendind OSC message: \"/FUBI/Combination/" << comboName << "\" with " << nb << " parameters" << std::endl;
-			}*/
-
 			MessageToSend msg = mapping->getOSCMessage(user, comboName);
 			if(msg.text != "")
 			{
@@ -170,29 +124,12 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 		{
 			//Tracking starts
 			trackingStates[userID] = true;
-			//oscpkt::Message trackingMsg;
-			//std::string trackingMessage;
-			//trackingMessage += "/FUBI/Tracking/User";
-			//trackingMsg.init(trackingMessage);
-			//trackingMsg.pushInt32(userID);
-			//trackingMsg.pushBool(trackingStates[userID]);
-
-			//pw.startBundle().addMessage(trackingMsg).endBundle();
-			//sock.sendPacket(pw.packetData(), pw.packetSize());
-			//trackingMsg.clear();
-			//if(displayOSCMessages)
-			//	std::cout << "sendind OSC message: \"/FUBI/Tracking/User " << userID << " " << trackingStates[userID] << "\"" << std::endl;
 		}
 		if((!user->m_inScene || !user->m_isTracked) && trackingStates[userID])
 		{
 			// Tracking ends
 			trackingStates[userID] = false;
 			oscpkt::Message trackingMsg;
-			//std::string trackingMessage;
-			//trackingMessage += "/FUBI/Tracking/User";
-			//trackingMsg.init(trackingMessage);
-			//trackingMsg.pushInt32(userID);
-			//trackingMsg.pushBool(trackingStates[userID]);
 
 			trackingMsg.init("/mediacycle/browser/0/released");
 			pw.startBundle().addMessage(trackingMsg).endBundle();
@@ -204,91 +141,6 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 	}
 }
 
-//float simpleAverageFilter(float tab[])
-//{
-//	float mean = 0;
-//	for (int i=0; i<FILTER_SIZE; i++)
-//		mean += tab[i];
-//	return mean/FILTER_SIZE;
-//}
-//
-//float medianFilter(const float tab[])
-//{
-//	float medianTab[FILTER_SIZE];
-//	for(int i=0; i<FILTER_SIZE; i++)
-//		medianTab[i] = tab[i];
-//
-//	bool sorted = false;
-//	float temp = 0;
-//	while(!sorted)
-//	{
-//		sorted = true;
-//		for(int j=0; j<FILTER_SIZE-1; j++)
-//		{
-//			if(medianTab[j] > medianTab[j+1])
-//			{
-//				temp = medianTab[j+1];
-//				medianTab[j+1] = medianTab[j];
-//				medianTab[j] = temp;
-//				sorted = false;
-//			}
-//		}
-//	}
-//	if(FILTER_SIZE %2 == 0)
-//		return (medianTab[FILTER_SIZE/2-1]+ medianTab[FILTER_SIZE/2])/2;
-//	else
-//		return medianTab[FILTER_SIZE/2];
-//
-//}
-//
-//void sendXYZTorsoPosition(unsigned int userID)
-//{
-//	FubiUser* user = Fubi::getUser(userID);
-//	const Vec3f& torsoPosition = user->m_currentTrackingData.jointPositions[SkeletonJoint::TORSO].m_position;
-//	torsoPositionsX[positionIndex] = torsoPosition.x;
-//	torsoPositionsY[positionIndex] = torsoPosition.y;
-//	torsoPositionsZ[positionIndex] = torsoPosition.z;
-//
-//	positionIndex = (positionIndex + 1) % FILTER_SIZE;
-//
-//	//send half of the values to not overload OSC
-//	if(halfPositionSending)
-//	{
-//		float x, y, z;
-//		//test without filter
-//		//x = torsoPosition.x;
-//		//y = torsoPosition.y
-//		//z = torsoPosition.z;
-//		
-//		// with filter (simple running average)
-//		//x = simpleAverageFilter(torsoPositionsX);
-//		//y = simpleAverageFilter(torsoPositionsY);
-//		//z = simpleAverageFilter(torsoPositionsZ);
-//		
-//		// with median filter
-//		x = medianFilter(torsoPositionsX);
-//		y = medianFilter(torsoPositionsY);
-//		z = medianFilter(torsoPositionsZ);
-//
-//		oscpkt::PacketWriter pw;
-//		oscpkt::Message trackingMsg;
-//		std::string trackingMessage;
-//		trackingMessage += "/FUBI/Position";
-//		trackingMsg.init(trackingMessage);
-//		trackingMsg.pushInt32(userID);
-//		trackingMsg.pushFloat(x);
-//		trackingMsg.pushFloat(y);
-//		trackingMsg.pushFloat(z);
-//
-//		pw.startBundle().addMessage(trackingMsg).endBundle();
-//		sock.sendPacket(pw.packetData(), pw.packetSize());
-//		trackingMsg.clear();
-//		if(displayOSCMessages)
-//			std::cout << "sendind OSC message: \"/FUBI/Position " << userID << " " << x << " " << z << "\"" << std::endl;
-//	}
-//	halfPositionSending = !halfPositionSending;
-//}
-//
 void glutIdle (void)
 {
 	// Display the frame
@@ -389,8 +241,6 @@ void glutDisplay (void)
 	unsigned int closestID = getClosestUserID();
 	if (closestID > 0)
 	{
-//		if(trackingStates[closestID] && sendOSCPosition)
-//			sendXYZTorsoPosition(closestID);
 		if(trackingStates[closestID] && checkCombinations)
 			checkPostures(closestID);
 	}
