@@ -268,7 +268,15 @@ public:
 	bool getImage(unsigned char* outputImage, Fubi::ImageType::Type type, Fubi::ImageNumChannels::Channel numChannels, Fubi::ImageDepth::Depth depth, 
 		unsigned int renderOptions = (Fubi::RenderOptions::Shapes | Fubi::RenderOptions::Skeletons | Fubi::RenderOptions::UserCaptions),
 		Fubi::DepthImageModification::Modification depthModifications = Fubi::DepthImageModification::UseHistogram,
-		unsigned int userId = 0, Fubi::SkeletonJoint::Joint jointOfInterest = Fubi::SkeletonJoint::NUM_JOINTS);
+        unsigned int userId = 0, Fubi::SkeletonJoint::Joint jointOfInterest = Fubi::SkeletonJoint::NUM_JOINTS);
+
+    /**
+     * \brief set the current gesture to be displayed on the image when calling getImage
+     *
+     * @param gesture the gesture name
+     * @param userId
+    */
+    void setCurrentGesture(std::string gesture, unsigned int userId = 0);
 
 	/**
 	 * \brief save an image from one of the OpenNI production nodes with specific format and optionally enhanced by different
@@ -355,4 +363,5 @@ private:
 	bool m_autoStartCombinationRecognizers[Fubi::Combinations::NUM_COMBINATIONS+1];
 
 	FubiISensor* m_sensor;
+    FubiUserGesture m_current_gesture;
 };

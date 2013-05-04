@@ -95,7 +95,8 @@ void FubiImageProcessing::getColorForUserID(unsigned int id, float& r, float& g,
 bool FubiImageProcessing::getImage(FubiISensor* sensor, unsigned char* outputImage, ImageType::Type type, ImageNumChannels::Channel numChannels, ImageDepth::Depth depth, 
 	unsigned int renderOptions /*= (RenderOptions::Shapes | RenderOptions::Skeletons | RenderOptions::UserCaptions)*/,
 	DepthImageModification::Modification depthModifications /*= DepthImageModification::UseHistogram*/,
-	unsigned int userId /*= 0*/, Fubi::SkeletonJoint::Joint jointOfInterest /*= Fubi::SkeletonJoint::NUM_JOINTS*/)
+    unsigned int userId /*= 0*/, Fubi::SkeletonJoint::Joint jointOfInterest /*= Fubi::SkeletonJoint::NUM_JOINTS*/,
+    FubiUserGesture current_gestures/*=FubiUserGesture()*/)
 {	
 	bool succes = false;
 	int applyThreshold = 0;
@@ -163,7 +164,23 @@ bool FubiImageProcessing::getImage(FubiISensor* sensor, unsigned char* outputIma
 		std::string s = "fps:";
 		std::ostringstream os;
 		os << setprecision(3) << fps;
-		s += os.str();
+
+
+        if(userId == 0){
+            for(FubiUserGesture::iterator current_gesture = current_gestures.begin(); current_gesture != current_gestures.end(); current_gesture++){
+                if(current_gesture->second !="")
+                    os << " user id " << current_gesture->first << " gesture '" << current_gesture->second << "'";
+            }
+        }
+        else{
+            FubiUserGesture::iterator current_gesture = current_gestures.find(userId);
+            if(current_gesture !=current_gestures.end()){
+                if(current_gesture->second !="")
+                    os << " user id " << current_gesture->first << " gesture '" << current_gesture->second << "'";
+            }
+        }
+
+        s += os.str();
 		
 		IplImage* image = cvCreateImageHeader(cvSize(width, height), (depth == ImageDepth::D8) ? IPL_DEPTH_8U : IPL_DEPTH_16U, numChannels);
 		image->imageData = (char*) outputImage;

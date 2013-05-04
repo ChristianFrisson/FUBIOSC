@@ -418,6 +418,14 @@ void FubiCore::updateUsers()
 		{
 			unsigned int id = userIDs[i];
 			FubiUser* user = m_users[i];
+
+            if(!user->m_inScene || !user->m_isTracked){
+                FubiUserGesture::iterator _current_gesture = m_current_gesture.find( user->m_id );
+                if(_current_gesture != m_current_gesture.end()){
+                    m_current_gesture.erase(_current_gesture);
+                }
+            }
+
 			if (user->m_id != id) // user at the wrong place or still unknown
 			{
 				// Try to find the user with the correct id (can only be later in the array as we already have corrected the ones before)
@@ -1885,9 +1893,14 @@ void FubiCore::resetTracking()
 bool FubiCore::getImage(unsigned char* outputImage, ImageType::Type type, ImageNumChannels::Channel numChannels, ImageDepth::Depth depth,
 		unsigned int renderOptions /*= (RenderOptions::Shapes | RenderOptions::Skeletons | RenderOptions::UserCaptions)*/,
 		DepthImageModification::Modification depthModifications /*= DepthImageModification::UseHistogram*/,
-		unsigned int userId /*= 0*/, Fubi::SkeletonJoint::Joint jointOfInterest /*= Fubi::SkeletonJoint::NUM_JOINTS*/)
+        unsigned int userId /*= 0*/, Fubi::SkeletonJoint::Joint jointOfInterest /*= Fubi::SkeletonJoint::NUM_JOINTS*/)
 {
-	return FubiImageProcessing::getImage(m_sensor, outputImage, type, numChannels, depth, renderOptions, depthModifications, userId, jointOfInterest);
+    return FubiImageProcessing::getImage(m_sensor, outputImage, type, numChannels, depth, renderOptions, depthModifications, userId, jointOfInterest, m_current_gesture);
+}
+
+void FubiCore::setCurrentGesture(std::string gesture, unsigned int userId /*= 0*/)
+{
+    this->m_current_gesture[userId] = gesture;
 }
 
 bool FubiCore::saveImage(const char* fileName, int jpegQuality, ImageType::Type type, ImageNumChannels::Channel numChannels, ImageDepth::Depth depth,

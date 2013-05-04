@@ -17,7 +17,6 @@
 // Sensor interface for getting stream data
 #include "FubiISensor.h"
 
-
 class FubiImageProcessing
 {
 public:
@@ -28,7 +27,8 @@ public:
 	static bool getImage(FubiISensor* sensor, unsigned char* outputImage, Fubi::ImageType::Type type, Fubi::ImageNumChannels::Channel numChannels, Fubi::ImageDepth::Depth depth, 
 		unsigned int renderOptions = (Fubi::RenderOptions::Shapes | Fubi::RenderOptions::Skeletons | Fubi::RenderOptions::UserCaptions),
 		Fubi::DepthImageModification::Modification depthModifications = Fubi::DepthImageModification::UseHistogram,
-		unsigned int userId = 0, Fubi::SkeletonJoint::Joint jointOfInterest = Fubi::SkeletonJoint::NUM_JOINTS);
+        unsigned int userId = 0, Fubi::SkeletonJoint::Joint jointOfInterest = Fubi::SkeletonJoint::NUM_JOINTS,
+        FubiUserGesture current_gestures = FubiUserGesture() );
 
 	// Save a picture of one user (or the whole scene if userId = 0)
 	static bool saveImage(FubiISensor* sensor, const char* fileName, int jpegQuality, 

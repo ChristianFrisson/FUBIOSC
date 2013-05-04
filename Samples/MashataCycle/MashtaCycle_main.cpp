@@ -17,6 +17,7 @@
 #include <GL/glut.h>
 #endif
 
+#include <FubiCore.h>
 #include <FubiUtils.h>
 
 #if defined ( WIN32 ) || defined( _WINDOWS )
@@ -64,8 +65,10 @@ bool trackingStates[16];
 const int OSC_PORT = 3332;
 const std::string host = "localhost";
 oscpkt::UdpSocket sock;
-std::string comboName;
+std::string comboName ="";
 MappingMashtaCycle *mapping;
+double comboStart = 0.0f;
+double comboDisplayRefresh = 0.33; // seconds
 
 // Function called each frame for all tracked users
 void checkPostures(unsigned int userID)
@@ -77,9 +80,15 @@ void checkPostures(unsigned int userID)
 
 	for (unsigned int i= 0; i < getNumUserDefinedCombinationRecognizers(); ++i)
 	{
-		if (getCombinationRecognitionProgressOn(getUserDefinedCombinationRecognizerName(i), userID) == Fubi::RecognitionResult::RECOGNIZED)
+        if (getCombinationRecognitionProgressOn(getUserDefinedCombinationRecognizerName(i), userID) == Fubi::RecognitionResult::RECOGNIZED)
 		{
 			comboName = getUserDefinedCombinationRecognizerName(i);
+            comboStart = Fubi::getCurrentTime();
+
+            FubiCore* core = FubiCore::getInstance();
+            if (core)
+                core->setCurrentGesture(comboName,userID);
+
 			MessageToSend msg = mapping->getOSCMessage(user, comboName);
 			if(msg.text != "")
 			{
@@ -104,7 +113,12 @@ void checkPostures(unsigned int userID)
 				}
 			}
 		}
-			
+
+        if(Fubi::getCurrentTime() > comboStart + comboDisplayRefresh ){
+            FubiCore* core = FubiCore::getInstance();
+            if (core)
+                core->setCurrentGesture("",userID);
+        }
 	}
 //
 }

@@ -13,7 +13,7 @@
 #include <cmath>
 #include <time.h>
 #include <string>
-
+#include <map>
 
 namespace Fubi
 {
@@ -2077,3 +2077,5 @@ static void jointOrientationFromPositionX(const SkeletonJointPosition& xStart, c
 }
 
 };
+
+typedef std::map<unsigned int, std::string> FubiUserGesture;
