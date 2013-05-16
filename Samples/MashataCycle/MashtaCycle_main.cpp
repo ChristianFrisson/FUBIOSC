@@ -62,7 +62,7 @@ bool trackingStates[16];
 /////////// OSC defines
 #define OSCPKT_OSTREAM_OUTPUT
 // OSC global variables
-const int OSC_PORT = 3332;
+const int OSC_PORT = 3333;
 const std::string host = "localhost";
 oscpkt::UdpSocket sock;
 std::string comboName ="";
