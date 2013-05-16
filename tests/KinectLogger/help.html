@@ -1,0 +1,76 @@
+<html>
+
+<h4>Command line parameters</h4>
+<pre>
+   parameters: [-?|-h]  [-pi]  [-pd]  [-n &lt;numuser&gt;]  [-s &lt;port&gt;]
+               [-vfr] [-vmaxbuf &lt;maxbuf&gt;]
+               [-b &lt;bitrate&gt;] [-v &lt;video&gt;] [&lt;file&gt;]</pre>
+<ul>
+<li> ?|h:    display this help
+<li> pi:     plain image: do not overlay the skeleton on the image
+<li> pd:     plain depth map: do not overlay the skeleton on the depth map
+<li> vfr:    variable frame rate video encoding. Guarantees that the frame presentation time matches the frame acquisition time. Useful if the computer drops Kinect frames.
+<li> maxbuf: maximum frames in the video encoding buffer. By default the buffering is unlimited, but this may lead to out of memory if the computer is too slow (see backlog in the status bar). If the backlog keeps increasing this option may be specified. In that case -vfr is recommended too. Use 0 to disable buffering.
+<li> &lt;numuser&gt;: maximum number of users to store/serve. "NaN" are used for padding if less users are effectively available.
+<li> &lt;port&gt;     starts a streaming server on &lt;port&gt;
+<li> &lt;bitrate&gt;  video &lt;bitrate&gt;
+<li> &lt;video&gt;    store video in &lt;video&gt;
+<li> &lt;file&gt;     store data in &lt;file&gt;
+</ul>
+
+<p>If neither a port nor a file is specified, the program displays the Kinect data without logging.</p>
+
+<p>It is advisable to use -vfr to ensure that the video frames are properly timestamped even when frames are dropped. However, make sure that your toolchain supports the resulting video format.</p>
+
+<h4>Streaming format</h4>
+
+<p>The data format (file and TCP server) is a plain text format with one line per sample, and space delimited channels.</p>
+
+<p>The number of channels is constant. It depends on the maximum number of user to track, which is a command line parameter.
+When less users than specified are visible, dummy data is used to fill the channels. The dummy data indicator is "NaN".
+Essentially any "NaN" means "no data".
+Some data analysis software such as Matlab seamlessly load files comprising "NaN" values.</p>
+<p>There are other cases where the channel may contain NaNs:</p>
+<ul>
+<li> when a user is detected but pose calibration has not been performed yet (no tracking). In this case the user center of mass is available, but the joint position cannot be determined and are marked by NaNs.
+<li> when a user is tracked, but the position of some joints cannot be determined (e.g. outside of the camera field of view), or the confidence in the position estimation is too low.
+</ul>
+
+
+<p>One sample comprises the following channels:</p>
+
+<pre>   channels: label ltime ktime fid &lt;body0&gt; &lt;body1&gt; ... &lt;bodyn&gt;</pre>
+
+<p> The number <i>n</i> corresponds to numuser command line parameter.
+
+<ul>
+<li> label: label provided by the user via keypresses - the number corresponds to the character code of the key which was pressed (typically ASCII code)
+<li> ltime: local time in milliseconds when the kinect data was processed. Zero time is platform dependent (use in a relative manner).
+<li> ktime: kinect time in milliseconds when the kinect generated new data. Starts at zero when the kinect is initialized.
+<li> fid: kinect frame id. Discontinuities would indicate frame drop - but they are unlikely to occur.
+<li> &lt;body<i>i</i>&gt;: channel data for the <i>i</i>th body.
+</ul>
+
+<pre>   body<i>i</i>:    id status com.x com.y com.z comprj.x comprj.y &lt;joint0&gt; &lt;joint1&gt; ....  &lt;joint14&gt;</pre>
+
+<ul>
+<li> id: user id. Note that the ids are reused, so one user moving out of the field of view and coming back might be assigned a different id.
+<li> status: tracking status. 0=Tracking. 1=Calibrating. 2=LookingForPose. The joints are only available when the user is tracked.
+<li> com: body center of mass coordinates in real-world coordinates.
+<li> comprj: body center of mass coordinates in screen coordinates.
+<li> &lt;joint<i>i</i>&gt;: channel data for the <i>i</i>th joint.
+</ul>
+
+<pre>   joint<i>i</i>:   pos.x pos.y pos.z pos.confidence posprj.x posprj.y</pre>
+
+<ul>
+<li> pos.x|y|z: position of the joint in real-world coordinates.
+<li> pos.confidence: confidence in the joint position estimation. The values taken are typically 0 (no confidence) or 1000 (confident).
+<li> posprj.x|y: position of the joint in screen coordinates.
+</ul>
+
+
+<p> The joints are provided in the following order: Head, Head, LeftShoulder, LeftElbow, LeftHand, RightShoulder, RightElbow, RightHand, Torso, LeftHip, LeftKnee, LeftFoot, RightHip, RightKnee, RightFoot.</p>
+
+
+</html>

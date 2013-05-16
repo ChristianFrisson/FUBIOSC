@@ -1,0 +1,7 @@
+KinectLogger allows to create a video containing the depth map and camera image. This functionaly is optional. It requires QtFFmpegWrapper (http://code.google.com/p/qtffmpegwrapper/)
+
+To enable the video functionalty make sure have QtFFmpegWrapper (http://code.google.com/p/qtffmpegwrapper/) somewhere and do the following in the .pro file:
+1) DEFINES += WRITEVIDEO
+2) Set the FFmpeg path (include and library)
+
+If WRITEVIDEO is not defined, then the video output functionality is disabled and QtFFmpegWrapper isn't required. No other changes to the code is required.
