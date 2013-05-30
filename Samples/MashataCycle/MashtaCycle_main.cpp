@@ -42,11 +42,12 @@ int dWidth= 0, dHeight= 0, rgbWidth= 0, rgbHeight= 0, irWidth = 0, irHeight = 0;
 bool g_showRGBImage = false;
 bool g_showIRImage = false;
 
-bool displayImageFromKinect = true;
+bool displayImage = true;
 bool displayOSCMessages = true;
-bool sendOSCPosition = true;
 bool checkCombinations = true;
 bool sendOSCCombinations = true;
+bool multiUserMode = false;
+
 
 short g_showInfo = 0;
 
@@ -58,6 +59,9 @@ const short g_numOutputmodes = 5;
 bool g_exitNextFrame = false;
 
 bool trackingStates[16];
+const int nbUsersTracked = 4;
+
+std::string recognizersFile("MashtaCycleRecognizers.xml");
 
 /////////// OSC defines
 #define OSCPKT_OSTREAM_OUTPUT
@@ -129,6 +133,7 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 	FubiUser* user;
 	unsigned int userID;
 	oscpkt::PacketWriter pw;
+    std::ostringstream message;
 
 	for(unsigned int i=0; i<usersIDs.size(); i++)
 	{
@@ -144,13 +149,14 @@ void checkTrackingState(std::deque<unsigned int> usersIDs)
 			// Tracking ends
 			trackingStates[userID] = false;
 			oscpkt::Message trackingMsg;
-
-			trackingMsg.init("/mediacycle/browser/0/released");
+            message << "/mediacycle/browser/" << usersIDs[i] << "/released";
+            
+			trackingMsg.init(message.str());
 			pw.startBundle().addMessage(trackingMsg).endBundle();
 			sock.sendPacket(pw.packetData(), pw.packetSize());
 			trackingMsg.clear();
 			if(displayOSCMessages)
-				std::cout << "sendind OSC message: \"/mediacycle/browser/0/released\"" << std::endl;		
+				std::cout << "sendind OSC message: \"" << message.str() << "\"" << std::endl;
 		}
 	}
 }
@@ -223,7 +229,7 @@ void glutDisplay (void)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dWidth, dHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, g_depthData);
 
 	// Display the OpenGL texture map
-	if(displayImageFromKinect)
+	if(displayImage)
 	{
 		glColor4f(1,1,1,1);
 
@@ -246,19 +252,31 @@ void glutDisplay (void)
 		glDisable(GL_TEXTURE_2D);
 	}
 //
-	// Check users tracking state
-	std::deque<unsigned int> usersIDs = getClosestUserIDs(15);
+	// Check users tracking state for 'nbUsersTracked'
+	std::deque<unsigned int> usersIDs = getClosestUserIDs(nbUsersTracked);
 	if(usersIDs.size()>0)
 		checkTrackingState(usersIDs);
+    
+    if(multiUserMode)
+    {
+        // Check gestures of nbUsersTracked closest users
+        for(int i=0; i<usersIDs.size(); i++)
+        {   
+            if(trackingStates[usersIDs[i]] && checkCombinations)
+                checkPostures(usersIDs[i]);
+        }
+    }
+    else
+    {
+        // Check closest user's gestures
+        unsigned int closestID = getClosestUserID();
+        if (closestID > 0)
+        {
+            if(trackingStates[closestID] && checkCombinations)
+                checkPostures(closestID);
+        }
+    }
 //
-	// Check closest user's gestures
-	unsigned int closestID = getClosestUserID();
-	if (closestID > 0)
-	{
-		if(trackingStates[closestID] && checkCombinations)
-			checkPostures(closestID);
-	}
-
 	// Swap the OpenGL display buffers
 	glutSwapBuffers();
 }
@@ -274,24 +292,24 @@ void glutKeyboard (unsigned char key, int x, int y)
 		break;
 	case 'm':
 		displayOSCMessages = !displayOSCMessages;
-		std::cout << "displayOSCMessage: " << displayOSCMessages << std::endl;
+		std::cout << "display OSC Message: " << displayOSCMessages << std::endl;
 		break;
 	case 'i':
-		displayImageFromKinect = !displayImageFromKinect;
-		std::cout << "displayImageFromKinect: " << displayImageFromKinect << std::endl;
-		break;
-	case 'p':
-		sendOSCPosition = !sendOSCPosition;
-		std::cout << "sendOSCPosition: " << sendOSCPosition << std::endl;
+		displayImage = !displayImage;
+		std::cout << "display Image " << displayImage << std::endl;
 		break;
 	case 'k':
 		checkCombinations = !checkCombinations;
-		std::cout << "checkCombinations: " << checkCombinations << std::endl;
+		std::cout << "check Combinations: " << checkCombinations << std::endl;
 		break;
 	case 'l':
 		sendOSCCombinations = !sendOSCCombinations;
-		std::cout << "sendOSCCombinations: " << sendOSCCombinations << std::endl;
+		std::cout << "send OSC Combinations: " << sendOSCCombinations << std::endl;
 		break;
+    case 'n':
+        multiUserMode = !multiUserMode;
+        std::cout << "multi user mode: " << multiUserMode << std::endl;
+        break;
 	case 'r':
 		{
 			g_showRGBImage = !g_showRGBImage;
@@ -328,11 +346,15 @@ void glutKeyboard (unsigned char key, int x, int y)
 			// Reload recognizers from xml
 			clearUserDefinedRecognizers();
 //			
-			if (loadRecognizersFromXML("MashtaCycleRecognizers.xml"))
+			if (loadRecognizersFromXML(recognizersFile.c_str()))
 			{		
-				printf("Succesfully reloaded recognizers xml!\n");
+                std::cout << "Succesfully reloaded ";
 				//combinationsJoints = getCombinations();
 			}
+            else
+                std::cout << "Couldn't reload ";
+            
+            std::cout << "recognizers from xml file " << recognizersFile << std::endl;
 //
 		}
 	}
@@ -356,7 +378,7 @@ int main(int argc, char ** argv)
 //	
 
 	// Alternative init without xml
-	init(SensorOptions());
+	init(SensorOptions(StreamOptions(), StreamOptions(-1, -1, -1), StreamOptions(-1, -1, -1)));
 
 	getDepthResolution(dWidth, dHeight);
 	getRgbResolution(rgbWidth, rgbHeight);
@@ -373,7 +395,7 @@ int main(int argc, char ** argv)
 	// All known combination recognizers will be started automatically for new users
 	setAutoStartCombinationRecognition(true);
 //
-    std::string recognizersFile("MashtaCycleRecognizers.xml");
+    
 #if defined(__APPLE__) && !defined(USE_DEBUG)
     std::string appPath(argv[0]);
     std::string suffix(".app");

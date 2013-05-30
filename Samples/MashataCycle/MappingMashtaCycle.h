@@ -36,16 +36,16 @@ public:
 	
 private:
 	int boundValue(float *value, float up, float low);
-	MessageToSend loopMessage();
-	MessageToSend stopMessage();	
-	MessageToSend reverbFreezeMessage();	
+	MessageToSend loopMessage(FubiUser* user);
+	MessageToSend stopMessage(FubiUser* user);	
+	MessageToSend reverbFreezeMessage(FubiUser* user);	
 	MessageToSend volumeMessage(FubiUser* user);	
 	MessageToSend speedMessage(FubiUser* user);	
 	MessageToSend reverbMixMessage(FubiUser* user);
 	MessageToSend panMessage(FubiUser* user);	
 	MessageToSend positionMessage(FubiUser* user);
 
-	bool reverbFreeze;
+	bool reverbFreeze[16];
 	float sceneWidth, sceneDepth, sceneDepthOffset;
 
 	std::map<std::string, MashtaSoundControl> mapping;
