@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
    
    MainWindow w(progname,plainimage,plaindepth,QString(s_file),QString(s_filevid),bitrate,num,port,vfr,vmaxbuf);
    //CF
-	//MainWindow w(progname,plainimage,plaindepth,QString(s_file),QString("test"),bitrate,num,port,vfr,vmaxbuf);
+    //MainWindow w(progname,plainimage,plaindepth,QString(s_file),QString("test"),bitrate,num,port,vfr,vmaxbuf);
    w.show();
    rv = a.exec();
 
